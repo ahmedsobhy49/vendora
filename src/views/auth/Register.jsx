@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import Input from "../../common/Input";
 import Button from "../../common/Button";
-import Error from "../../common/Error";
+import FieldError from "../../common/FieldError";
 import { Link } from "react-router-dom";
 import AppLogo from "../../common/AppLogo";
 
@@ -69,7 +69,7 @@ export default function Register() {
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
             />
-            <Error
+            <FieldError
               errorMessage={formik.errors.name}
               touched={formik.touched.name}
             />
@@ -84,7 +84,7 @@ export default function Register() {
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
             />
-            <Error
+            <FieldError
               errorMessage={formik.errors.email}
               touched={formik.touched.email}
             />
@@ -99,7 +99,7 @@ export default function Register() {
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
             />
-            <Error
+            <FieldError
               errorMessage={formik.errors.password}
               touched={formik.touched.password}
             />
@@ -115,13 +115,15 @@ export default function Register() {
               onChange={formik.handleChange}
             />
             {!formik.errors.password && (
-              <Error
+              <FieldError
                 errorMessage={formik.errors.confirmPassword}
                 touched={formik.touched.confirmPassword}
               />
             )}
           </div>
-          <Button buttonText={"Sign Up"} type="submit" />
+          <Button type="submit">
+            <p>Sign Up</p>
+          </Button>
         </div>
       </form>
       <div className="flex items-center gap-1 mt-3">

@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import React from "react";
 import * as Yup from "yup";
-import Error from "../../common/Error";
+import FieldError from "../../common/FieldError";
 import Input from "../../common/Input";
 import Button from "../../common/Button";
 import { Link } from "react-router-dom";
@@ -45,7 +45,7 @@ export default function Login() {
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
             />
-            <Error
+            <FieldError
               errorMessage={formik.errors.email}
               touched={formik.touched.email}
             />
@@ -60,12 +60,14 @@ export default function Login() {
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
             />
-            <Error
+            <FieldError
               errorMessage={formik.errors.password}
               touched={formik.touched.password}
             />
           </div>
-          <Button buttonText={"Sign In"} type="submit" />
+          <Button type="submit">
+            <p>Sign In</p>
+          </Button>
         </div>
       </form>
       <div className="flex items-center gap-1 mt-3">

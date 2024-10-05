@@ -1,12 +1,22 @@
 import { useFormik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import * as Yup from "yup";
-import Error from "../../common/Error";
+import FieldError from "../../common/FieldError";
 import Input from "../../common/Input";
 import Button from "../../common/Button";
 import AppLogo from "../../common/AppLogo";
+import { useMutation } from "react-query";
+import adminLogin from "../../services/adminLogin";
+import Message from "../../common/Message";
+import Loading from "react-loading";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminLogin() {
+  const navigate = useNavigate();
+  const [loginRequestMessage, setLoginRequestMessage] = useState({
+    type: "",
+    message: "",
+  });
   const validationSchema = Yup.object({
     email: Yup.string().required("Email value is required"),
     password: Yup.string().required("Password value is required"),
@@ -21,9 +31,24 @@ export default function AdminLogin() {
     onSubmit: handleSubmit,
   });
 
+  const { mutate, isError, isLoading, isSuccess } = useMutation(adminLogin);
+
   function handleSubmit(values) {
-    console.log(values);
+    mutate(values, {
+      onError: (error) => {
+        setLoginRequestMessage({
+          type: "error",
+          message: error.response.data.message,
+        });
+      },
+      onSuccess: (data) => {
+        setLoginRequestMessage({ type: "success", message: "Login Success" });
+        navigate("/admin/dashboard");
+        localStorage.setItem("accessToken", data.data.token);
+      },
+    });
   }
+
   return (
     <div className="w-full">
       <AppLogo
@@ -43,7 +68,7 @@ export default function AdminLogin() {
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
             />
-            <Error
+            <FieldError
               errorMessage={formik.errors.email}
               touched={formik.touched.email}
             />
@@ -58,12 +83,27 @@ export default function AdminLogin() {
               onBlur={formik.handleBlur}
               onChange={formik.handleChange}
             />
-            <Error
+            <FieldError
               errorMessage={formik.errors.password}
               touched={formik.touched.password}
             />
           </div>
-          <Button buttonText={"Sign In"} type="submit" />
+          <Button type="submit">
+            {isLoading ? (
+              <Loading
+                type="spin"
+                className="mx-auto"
+                width={25}
+                height={"auto"}
+              />
+            ) : (
+              <p>Sign In</p>
+            )}
+          </Button>
+          <Message
+            message={loginRequestMessage.message}
+            type={loginRequestMessage.type}
+          />
         </div>
       </form>
     </div>

@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.custom-max-hight {
+  max-height: calc(100vh - 14rem);
+}
+
+.category-custom-hight {
+  height: calc(100vh - 8rem);
+}

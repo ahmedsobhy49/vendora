@@ -5,15 +5,15 @@ const defaultLabelClassName = `text-gray-700 text-[1rem] font-bold`;
 
 export default function Input({
   label = "",
+  placeholder = "",
   labelClassName = defaultLabelClassName,
-  name,
-  type,
   inputClassName = defaultInputClassName,
+  type,
+  id,
+  name,
   value,
   onBlur,
   onChange,
-  id,
-  placeholder = "",
 }) {
   return (
     <>
