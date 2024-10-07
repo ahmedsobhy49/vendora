@@ -3,7 +3,7 @@ import DashboardContainer from "../../../../../common/DashboardContainer";
 import Summaries from "./components/Summaries";
 import RecentOrders from "./components/RecentOrders";
 import Statistics from "./components/Statistics";
-import Chat from "./components/Chat";
+import RecentChats from "./components/RecentChats";
 
 export default function Dashboard() {
   return (
@@ -12,8 +12,8 @@ export default function Dashboard() {
         <Summaries />
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-1 w-full">
-          <Chat />
           <Statistics />
+          <RecentChats />
         </div>
 
         <RecentOrders />

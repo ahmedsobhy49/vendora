@@ -23,7 +23,7 @@ export default function Summaries() {
     <div className=" grid grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-1 text-black ">
       <SummaryCard title={"Total Sales"} count={"1000"}>
         <FaFileInvoiceDollar
-          color="green"
+          color="#10a66c"
           className="text-[3rem] sm:text-[4rem] md:text-[6rem] xl:text-[4.5rem]"
         />
       </SummaryCard>
