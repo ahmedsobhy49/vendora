@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { HiOutlineArrowUpRight } from "react-icons/hi2";
 import NoDataMessage from "../../../../../../common/NoDataMessage";
@@ -125,9 +125,29 @@ function ChatMessage({ name, time, message, avatar }) {
 }
 
 function ChatMessages() {
+  const [messageLimit, setMessageLimit] = useState(3);
+
+  useEffect(() => {
+    const updateMessageLimit = () => {
+      if (window.innerWidth >= 1536) {
+        setMessageLimit(5);
+      } else if (window.innerWidth >= 1440) {
+        setMessageLimit(4);
+      } else {
+        setMessageLimit(3);
+      }
+    };
+
+    updateMessageLimit();
+
+    window.addEventListener("resize", updateMessageLimit);
+
+    return () => window.removeEventListener("resize", updateMessageLimit);
+  }, []);
+
   return (
     <ul className="flex flex-col gap-4">
-      {messages.map((msg) => (
+      {messages.slice(0, messageLimit).map((msg) => (
         <ChatMessage
           key={msg.id}
           name={msg.name}
@@ -144,7 +164,7 @@ export default function RecentChats() {
   return (
     <div className="bg-white shadow-md w-full p-5 ">
       <ChatHeader />
-      <div className="h-full min-h-[100px] max-h-[400px] xl:max-h-[400px] 2xl:max-h-[500px] overflow-auto hide-scrollbar">
+      <div className="h-full ">
         {isThereMessages ? (
           <ChatMessages />
         ) : (
@@ -154,3 +174,5 @@ export default function RecentChats() {
     </div>
   );
 }
+
+// min-h-[100px] max-h-[400px] xl:max-h-[400px] 2xl:max-h-[500px] overflow-auto hide-scrollba

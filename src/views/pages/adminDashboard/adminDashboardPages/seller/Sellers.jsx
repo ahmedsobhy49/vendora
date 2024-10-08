@@ -3,98 +3,11 @@ import DashboardContainer from "../../../../../common/DashboardContainer";
 import TableContainer from "../../gen/TableContainer";
 import TableBodyContainer from "../../gen/TableBodyContainer";
 import Input from "../../../../../common/Input";
+import { IoEyeOutline } from "react-icons/io5";
+import sellers from "../../../../../data/sellers.json";
+import { Link } from "react-router-dom";
 
-const sellersData = [
-  {
-    id: 0,
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Sport_balls.svg/1024px-Sport_balls.svg.png",
-    name: "mohsen",
-    shopName: "eltawhed welnoor",
-    paymentStatus: "pending",
-    email: "mohsen@gmail.com",
-    division: "dhaka",
-    district: "ultara",
-  },
-  {
-    id: 0,
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Sport_balls.svg/1024px-Sport_balls.svg.png",
-    name: "mohsen",
-    shopName: "eltawhed welnoor",
-    paymentStatus: "pending",
-    email: "mohsen@gmail.com",
-    division: "dhaka",
-    district: "ultara",
-  },
-  {
-    id: 0,
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Sport_balls.svg/1024px-Sport_balls.svg.png",
-    name: "mohsen",
-    shopName: "eltawhed welnoor",
-    paymentStatus: "pending",
-    email: "mohsen@gmail.com",
-    division: "dhaka",
-    district: "ultara",
-  },
-  {
-    id: 0,
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Sport_balls.svg/1024px-Sport_balls.svg.png",
-    name: "mohsen",
-    shopName: "eltawhed welnoor",
-    paymentStatus: "pending",
-    email: "mohsen@gmail.com",
-    division: "dhaka",
-    district: "ultara",
-  },
-  {
-    id: 0,
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Sport_balls.svg/1024px-Sport_balls.svg.png",
-    name: "mohsen",
-    shopName: "eltawhed welnoor",
-    paymentStatus: "pending",
-    email: "mohsen@gmail.com",
-    division: "dhaka",
-    district: "ultara",
-  },
-  {
-    id: 0,
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Sport_balls.svg/1024px-Sport_balls.svg.png",
-    name: "mohsen",
-    shopName: "eltawhed welnoor",
-    paymentStatus: "pending",
-    email: "mohsen@gmail.com",
-    division: "dhaka",
-    district: "ultara",
-  },
-  {
-    id: 0,
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Sport_balls.svg/1024px-Sport_balls.svg.png",
-    name: "mohsen",
-    shopName: "eltawhed welnoor",
-    paymentStatus: "pending",
-    email: "mohsen@gmail.com",
-    division: "dhaka",
-    district: "ultara",
-  },
-  {
-    id: 0,
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Sport_balls.svg/1024px-Sport_balls.svg.png",
-    name: "mohsen",
-    shopName: "eltawhed welnoor",
-    paymentStatus: "pending",
-    email: "mohsen@gmail.com",
-    division: "dhaka",
-    district: "ultara",
-  },
-];
-const isThereSellers = Boolean(sellersData?.length);
+const isThereSellers = Boolean(sellers.sellers?.length);
 
 export default function Sellers() {
   return (
@@ -106,20 +19,26 @@ export default function Sellers() {
         <TableContainer>
           <SellerTableHead />
           <TableBodyContainer>
-            {sellersData?.map((seller) => {
-              return (
-                <SellerTableRow
-                  sellerId={seller.id}
-                  name={seller.name}
-                  shopName={seller.shopName}
-                  image={seller.image}
-                  email={seller.email}
-                  district={seller.district}
-                  division={seller.division}
-                  paymentStatus={seller.paymentStatus}
-                />
-              );
-            })}
+            {sellers.sellers
+              ?.filter((seller) => {
+                return seller.status === "active";
+              })
+              .map((seller) => {
+                return (
+                  <SellerTableRow
+                    seller={seller}
+                    key={seller.id}
+                    sellerId={seller.id}
+                    name={seller.name}
+                    shopName={seller.shopName}
+                    image={seller.image}
+                    email={seller.email}
+                    district={seller.district}
+                    division={seller.division}
+                    paymentStatus={seller.paymentStatus}
+                  />
+                );
+              })}
           </TableBodyContainer>
         </TableContainer>
       </div>
@@ -136,6 +55,7 @@ function SellerTableRow({
   email,
   division,
   district,
+  seller,
 }) {
   return (
     <tr className="h-20 text-xs text-gray-700 md:text-sm">
@@ -166,7 +86,13 @@ function SellerTableRow({
         {district}
       </td>
       <td className="py-3 text-center whitespace-nowrap gap-5 xl:w-5">
-        <button>x</button>
+        <Link
+          to={`/admin/dashboard/sellers/${sellerId}`}
+          state={seller}
+          className=" flex bg-green-400 py-1 px-2 justify-center items-center"
+        >
+          <IoEyeOutline size={20} color="#fff" />
+        </Link>
       </td>
     </tr>
   );
@@ -214,7 +140,7 @@ function SellerTableHead() {
           className="px-[2.5rem] py-[0.5rem] text-center sm:pt-[1rem]"
         >
           Division
-        </th>{" "}
+        </th>
         <th
           scope="col"
           className="px-[2.5rem] py-[0.5rem] text-center sm:pt-[1rem]"
@@ -233,11 +159,11 @@ function SellerTableHeader() {
   return (
     <div className="flex items-center justify-between p-[1rem] shadow-md bg-[#338ffb] lg:px-[2rem]">
       <Input
-        inputClassName="w-[10.625rem] px-[0.75rem] py-[0.25rem] outline-none rounded-full sm:w-1/3 sm:py-[0.5rem] placeholder:text-[0.85rem] lg:placeholder:text-[1rem]"
-        placeholder="Search Category..."
-        id="search-category"
-        name="search-category"
-        type="search"
+        inputClassName="w-[170px] sm:w-1/3 lg:w-1/4 xl:w-1/5 py-1 sm:py-2 px-3 outline-none rounded-full placeholder:text-xs placeholder:sm:text-[0.85rem] lg:placeholder:text-[1rem]"
+        placeholder="Search Sellers..."
+        id={"search-seller"}
+        name={"search-seller"}
+        type={"search"}
       />
     </div>
   );

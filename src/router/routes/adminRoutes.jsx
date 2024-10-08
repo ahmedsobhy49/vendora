@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy } from "react";
 import AdminLayout from "../../layouts/admin/AdminLayout";
 import CustomSuspense from "../../common/CustomSuspense";
 
@@ -27,6 +27,11 @@ const Category = lazy(() =>
 );
 const Sellers = lazy(() =>
   import("../../views/pages/adminDashboard/adminDashboardPages/seller/Sellers")
+);
+const SellerDetails = lazy(() =>
+  import(
+    "../../views/pages/adminDashboard/adminDashboardPages/seller/SellerDetails"
+  )
 );
 const PaymentRequest = lazy(() =>
   import(
@@ -74,6 +79,14 @@ const adminRoutes = [
         element: (
           <CustomSuspense>
             <Sellers />
+          </CustomSuspense>
+        ),
+      },
+      {
+        path: "/admin/dashboard/sellers/:sellerId",
+        element: (
+          <CustomSuspense>
+            <SellerDetails />
           </CustomSuspense>
         ),
       },

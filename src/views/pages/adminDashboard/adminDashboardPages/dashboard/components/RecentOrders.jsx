@@ -88,13 +88,118 @@ export const ordersData = [
     paymentStatus: "Pending",
     active: "View",
   },
+  {
+    id: "392",
+    price: 9837,
+    orderStatus: "Pending",
+    paymentStatus: "Pending",
+    active: "View",
+  },
+  {
+    id: "392",
+    price: 9837,
+    orderStatus: "Pending",
+    paymentStatus: "Pending",
+    active: "View",
+  },
+  {
+    id: "392",
+    price: 9837,
+    orderStatus: "Pending",
+    paymentStatus: "Pending",
+    active: "View",
+  },
+  {
+    id: "392",
+    price: 9837,
+    orderStatus: "Pending",
+    paymentStatus: "Pending",
+    active: "View",
+  },
+  {
+    id: "392",
+    price: 9837,
+    orderStatus: "Pending",
+    paymentStatus: "Pending",
+    active: "View",
+  },
+  {
+    id: "392",
+    price: 9837,
+    orderStatus: "Pending",
+    paymentStatus: "Pending",
+    active: "View",
+  },
+  {
+    id: "392",
+    price: 9837,
+    orderStatus: "Pending",
+    paymentStatus: "Pending",
+    active: "View",
+  },
+  {
+    id: "392",
+    price: 9837,
+    orderStatus: "Pending",
+    paymentStatus: "Pending",
+    active: "View",
+  },
+  {
+    id: "392",
+    price: 9837,
+    orderStatus: "Pending",
+    paymentStatus: "Pending",
+    active: "View",
+  },
+  {
+    id: "392",
+    price: 9837,
+    orderStatus: "Pending",
+    paymentStatus: "Pending",
+    active: "View",
+  },
+  {
+    id: "392",
+    price: 9837,
+    orderStatus: "Pending",
+    paymentStatus: "Pending",
+    active: "View",
+  },
+  {
+    id: "392",
+    price: 9837,
+    orderStatus: "Pending",
+    paymentStatus: "Pending",
+    active: "View",
+  },
+  {
+    id: "392",
+    price: 9837,
+    orderStatus: "Pending",
+    paymentStatus: "Pending",
+    active: "View",
+  },
+  {
+    id: "392",
+    price: 9837,
+    orderStatus: "Pending",
+    paymentStatus: "Pending",
+    active: "View",
+  },
+  {
+    id: "199",
+    price: 9837,
+    orderStatus: "Pending",
+    paymentStatus: "Pending",
+    active: "View",
+  },
 ];
 
 const isThereOrders = Boolean(ordersData?.length);
 
 export function TableHead() {
   return (
-    <thead className="w-full text-gray-700 text-[0.7rem] sm:text-[0.75rem] md:text-[0.77rem] lg:text-sm tracking-tighter md:tracking-normal uppercase xl:h-[64.5px]">
+    <thead className="w-full text-gray-700 text-[0.7rem] sm:text-[0.75rem] md:text-[0.77rem] lg:text-sm tracking-tighter md:tracking-normal uppercase ">
       <tr>
         <th scope="col" className="py-2 sm:pt-4 text-center ">
           ID
@@ -124,7 +229,7 @@ export function TableRow({
   active,
 }) {
   return (
-    <tr className="xl:h-14 text-xs text-gray-700 md:text-sm">
+    <tr className="xl:h-16 text-xs text-gray-700 md:text-sm xl:text-[1rem]">
       <td className="py-3 whitespace-nowrap font-bold text-gray-500 text-center">
         {orderId}
       </td>
@@ -169,7 +274,7 @@ function TableHeader() {
 function TableBody() {
   return (
     <tbody className="divide-y divide-gray-300">
-      {ordersData?.map((order) => {
+      {ordersData?.slice(0, 6).map((order) => {
         return (
           <TableRow
             orderId={order.id}
@@ -185,9 +290,9 @@ function TableBody() {
 }
 export default function RecentOrders() {
   return (
-    <div className="shadow-lg pb-4 bg-white">
+    <div className="shadow-lg pb-2 bg-white">
       <TableHeader />
-      <div className="pt-2 px-4 lg:px-8 min-h-40 max-h-60 sm:max-h-80 xl:max-h-[25rem] bg-white overflow-auto">
+      <div className="pt-2 px-4 lg:px-8 bg-white ">
         {isThereOrders ? (
           <table className="w-full divide-y divide-gray-400 bg-white">
             <TableHead />

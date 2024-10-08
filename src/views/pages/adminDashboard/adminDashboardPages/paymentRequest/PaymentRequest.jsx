@@ -8,61 +8,73 @@ const PaymentRequestsData = [
     id: 2344,
     ammout: 3243,
     requestStatus: "Pending",
-    date: new Date(Date.now).getUTCDate,
+    date: new Date().toLocaleDateString(),
   },
   {
     id: 2344,
     ammout: 3243,
     requestStatus: "Pending",
-    date: new Date(Date.now).getUTCDate,
+    date: new Date().toLocaleDateString(),
   },
   {
     id: 2344,
     ammout: 3243,
     requestStatus: "Pending",
-    date: new Date(Date.now).getUTCDate,
+    date: new Date().toLocaleDateString(),
   },
   {
     id: 2344,
     ammout: 3243,
     requestStatus: "Pending",
-    date: new Date(Date.now).getUTCDate,
+    date: new Date().toLocaleDateString(),
   },
   {
     id: 2344,
     ammout: 3243,
     requestStatus: "Pending",
-    date: new Date(Date.now).getUTCDate(),
+    date: new Date().toLocaleDateString(),
   },
   {
     id: 2344,
     ammout: 3243,
     requestStatus: "Pending",
-    date: new Date(Date.now).getUTCDate,
+    date: new Date().toLocaleDateString(),
   },
   {
     id: 2344,
     ammout: 3243,
     requestStatus: "Pending",
-    date: new Date(Date.now).getUTCDate,
+    date: new Date().toLocaleDateString(),
   },
   {
     id: 2344,
     ammout: 3243,
     requestStatus: "Pending",
-    date: new Date(Date.now).getUTCDate,
+    date: new Date().toLocaleDateString(),
   },
   {
     id: 2344,
     ammout: 3243,
     requestStatus: "Pending",
-    date: new Date(Date.now).getUTCDate,
+    date: new Date().toLocaleDateString(),
   },
   {
     id: 2344,
     ammout: 3243,
     requestStatus: "Pending",
-    date: new Date(Date.now).getUTCDate,
+    date: new Date().toLocaleDateString(),
+  },
+  {
+    id: 2344,
+    ammout: 3243,
+    requestStatus: "Pending",
+    date: new Date().toLocaleDateString(),
+  },
+  {
+    id: 2344,
+    ammout: 3243,
+    requestStatus: "Pending",
+    date: new Date().toLocaleDateString(),
   },
 ];
 
@@ -96,15 +108,39 @@ export default function PaymentRequest() {
 
 function TableHeader() {
   return (
-    <div className="flex items-center text-lg font-bold text-white justify-between p-4 py-4 lg:px-8 bg-[#338ffb] h-[72px]  ">
+    <div className="flex items-center text-lg font-bold text-white justify-between p-4 py-4 lg:px-8 bg-[#338ffb] h-[64.5px]">
       <h3 className="tracking-wider">Withdrawal Requests </h3>
     </div>
   );
 }
 
+function TableHead() {
+  return (
+    <thead className="w-full text-gray-700 text-[0.7rem] sm:text-[0.75rem] md:text-[0.77rem] lg:text-sm tracking-tighter md:tracking-normal uppercase ">
+      <tr>
+        <th scope="col" className="py-4 sm:pt-4 text-center ">
+          ID
+        </th>
+        <th scope="col" className="py-4 sm:pt-4 px-3 text-center">
+          Ammount
+        </th>
+        <th scope="col" className="py-4 sm:pt-4 px-3  text-center">
+          Request Status
+        </th>
+        <th scope="col" className="py-4 sm:pt-4 px-3 text-center">
+          Date
+        </th>
+        <th scope="col" className="py-4 sm:pt-4  text-center">
+          Action
+        </th>
+      </tr>
+    </thead>
+  );
+}
+
 function TableRow({ requestId, ammount, requestStatus, date }) {
   return (
-    <tr className="h-20 text-xs text-gray-700 md:text-sm">
+    <tr className="xl:h-16 text-xs text-gray-700 md:text-sm xl:text-[1rem]">
       <td className="py-3 whitespace-nowrap font-bold text-gray-500 text-center">
         {requestId}
       </td>
@@ -119,32 +155,10 @@ function TableRow({ requestId, ammount, requestStatus, date }) {
       <td className="py-3 px-3 whitespace-nowrap text-center">{date}</td>
 
       <td className=" py-3 whitespace-nowrap text-center">
-        <button>Comnfirm</button>
+        <button className="bg-green-400 text-white p-2 tracking-wide rounded-full">
+          Confirm
+        </button>
       </td>
     </tr>
-  );
-}
-
-function TableHead() {
-  return (
-    <thead className="w-full text-gray-700 text-[0.7rem] sm:text-[0.75rem] md:text-[0.77rem] lg:text-sm tracking-tighter md:tracking-normal uppercase xl:h-[71px]">
-      <tr>
-        <th scope="col" className="py-2 sm:pt-4 text-center ">
-          ID
-        </th>
-        <th scope="col" className="py-2 sm:pt-4 px-3 text-center">
-          Ammount
-        </th>
-        <th scope="col" className="py-2 sm:pt-4 px-3  text-center">
-          Request Status
-        </th>
-        <th scope="col" className="py-2 sm:pt-4 px-3 text-center">
-          Date
-        </th>
-        <th scope="col" className="py-2 sm:pt-4  text-center">
-          Action
-        </th>
-      </tr>
-    </thead>
   );
 }

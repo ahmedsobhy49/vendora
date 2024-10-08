@@ -2,8 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  font-size: 0.9em;
+}
+
+.custom-hight {
+  min-height: calc(100vh - 11rem);
+}
+
+@media (min-width: 1024px) {
+  .custom-hight {
+    height: calc(100vh - 14rem);
+  }
+}
+
 .custom-max-hight {
-  max-height: calc(100vh - 14rem);
+  max-height: calc(100vh - 0rem);
 }
 
 .category-custom-hight {
