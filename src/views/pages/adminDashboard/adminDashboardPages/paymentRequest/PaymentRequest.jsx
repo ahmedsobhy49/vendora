@@ -2,6 +2,7 @@ import React from "react";
 import TableContainer from "../../gen/TableContainer";
 import TableBodyContainer from "../../gen/TableBodyContainer";
 import DashboardContainer from "../../../../../common/DashboardContainer";
+import TableHeadContainer from "../../gen/TableHeadContainer";
 
 const PaymentRequestsData = [
   {
@@ -84,7 +85,7 @@ export default function PaymentRequest() {
     <DashboardContainer>
       <div>
         <TableHeader />
-        <div className="bg-white h-[49.4rem] overflow-auto px-10">
+        <div className="bg-white table-custom-hight overflow-auto hide-scrollbar">
           <TableContainer>
             <TableHead />
             <TableBodyContainer>
@@ -108,17 +109,19 @@ export default function PaymentRequest() {
 
 function TableHeader() {
   return (
-    <div className="flex items-center text-lg font-bold text-white justify-between p-4 py-4 lg:px-8 bg-[#338ffb] h-[64.5px]">
-      <h3 className="tracking-wider">Withdrawal Requests </h3>
+    <div className="bg-[#338ffb] h-[65px] flex items-center p-4 lg:px-8 text-white">
+      <h3 className="text-[0.95rem] sm:text-[1.1rem] md:tracking-wide font-bold">
+        Withdrawal Requests
+      </h3>
     </div>
   );
 }
 
 function TableHead() {
   return (
-    <thead className="w-full text-gray-700 text-[0.7rem] sm:text-[0.75rem] md:text-[0.77rem] lg:text-sm tracking-tighter md:tracking-normal uppercase ">
+    <TableHeadContainer>
       <tr>
-        <th scope="col" className="py-4 sm:pt-4 text-center ">
+        <th scope="col" className="py-4 sm:pt-4 text-center">
           ID
         </th>
         <th scope="col" className="py-4 sm:pt-4 px-3 text-center">
@@ -134,13 +137,13 @@ function TableHead() {
           Action
         </th>
       </tr>
-    </thead>
+    </TableHeadContainer>
   );
 }
 
 function TableRow({ requestId, ammount, requestStatus, date }) {
   return (
-    <tr className="xl:h-16 text-xs text-gray-700 md:text-sm xl:text-[1rem]">
+    <tr className="xl:h-16 text-xs text-gray-700 md:text-sm xl:text-[1rem] even:bg-slate-50">
       <td className="py-3 whitespace-nowrap font-bold text-gray-500 text-center">
         {requestId}
       </td>

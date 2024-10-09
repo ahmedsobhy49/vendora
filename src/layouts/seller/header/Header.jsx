@@ -12,7 +12,7 @@ export default function Header({ setShowSideBar }) {
         />
         <input
           type="search"
-          id="admin-search"
+          id="seller-search"
           placeholder="Search"
           className="px-5 py-1 sm:py-2 rounded-3xl outline-none w-44 sm:w-64 lg:w-80 placeholder:text-[0.95rem] placeholder:sm:text-[1rem] bg-slate-200"
         />

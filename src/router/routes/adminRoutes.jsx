@@ -1,6 +1,7 @@
 import { lazy } from "react";
 import AdminLayout from "../../layouts/admin/AdminLayout";
 import CustomSuspense from "../../common/CustomSuspense";
+import OrderDetails from "../../views/pages/adminDashboard/adminDashboardPages/orders/OrderDetails";
 
 const Dashboard = lazy(() =>
   import(
@@ -66,6 +67,15 @@ const adminRoutes = [
           </CustomSuspense>
         ),
       },
+      {
+        path: "/admin/dashboard/orders/:orderId",
+        element: (
+          <CustomSuspense>
+            <OrderDetails />
+          </CustomSuspense>
+        ),
+      },
+
       {
         path: "/admin/dashboard/category",
         element: (

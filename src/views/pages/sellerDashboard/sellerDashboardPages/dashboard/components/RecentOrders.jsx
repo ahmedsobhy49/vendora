@@ -2,8 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { HiOutlineArrowUpRight } from "react-icons/hi2";
 import NoDataMessage from "../../../../../../common/NoDataMessage";
-import { OrdersTableHead, OrdersTableRow } from "../../orders/Orders";
-
+import {
+  OrdersTableHead,
+  OrdersTableRow,
+} from "../../../../adminDashboard/adminDashboardPages/orders/Orders";
 export const ordersData = [
   {
     id: "100000",
@@ -231,7 +233,7 @@ function TableHeader() {
       </h3>
       {isThereOrders && (
         <Link
-          to={"/admin/dashboard/orders"}
+          to={"/seller/dashboard/orders"}
           className="text-xs sm:text-sm gap-1 flex items-center hover:underline"
         >
           <span> View all</span> <HiOutlineArrowUpRight />

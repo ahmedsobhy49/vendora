@@ -1,46 +1,99 @@
 import React from "react";
-import {
-  TableHead,
-  TableRow,
-  ordersData,
-} from "../dashboard/components/RecentOrders";
+import { ordersData } from "../dashboard/components/RecentOrders";
 import DashboardContainer from "../../../../../common/DashboardContainer";
-import Input from "../../../../../common/Input";
 import TableBodyContainer from "../../gen/TableBodyContainer";
 import TableContainer from "../../gen/TableContainer";
-
-function TableHeader() {
+import TableHeaderContainer from "../../gen/TableHeaderContainer";
+import SearchInput from "../../gen/SearchInput";
+import TableHeadContainer from "../../gen/TableHeadContainer";
+import { Link } from "react-router-dom";
+function OrdersTableHeader() {
   return (
-    <div className="flex items-center justify-between p-4 py-4 lg:px-8 bg-[#338ffb]">
-      <Input
-        inputClassName="w-[170px] sm:w-1/3 lg:w-1/4 xl:w-1/5 py-1 sm:py-2 px-3 outline-none rounded-full placeholder:text-xs placeholder:sm:text-[0.85rem] lg:placeholder:text-[1rem]"
-        placeholder="Search Orders..."
-        id={"search-order"}
-        name={"search-order"}
-        type={"search"}
-      />
-    </div>
+    <TableHeaderContainer>
+      <SearchInput placeholder={"search order"} id={"search-order"} />
+    </TableHeaderContainer>
+  );
+}
+
+export function OrdersTableHead() {
+  return (
+    <TableHeadContainer>
+      <tr>
+        <th scope="col" className="py-2 sm:pt-4 px-3 text-center ">
+          ID
+        </th>
+        <th scope="col" className="py-2 sm:pt-4 px-3 text-center">
+          Price
+        </th>
+        <th scope="col" className="py-2 sm:pt-4 px-3  text-center">
+          Payment Status
+        </th>
+        <th scope="col" className="py-2 sm:pt-4 px-3 text-center">
+          Order Status
+        </th>
+        <th scope="col" className="py-2 sm:pt-4 px-3 text-center">
+          Action
+        </th>
+      </tr>
+    </TableHeadContainer>
+  );
+}
+
+export function OrdersTableRow({
+  order,
+  orderId,
+  orderPrice,
+  paymentStatus,
+  orderStatus,
+}) {
+  return (
+    <tr className="xl:h-16 text-xs text-gray-700 md:text-sm xl:text-[1rem] even:bg-slate-50">
+      <td className="py-3 px-3 whitespace-nowrap font-bold text-gray-500 text-center">
+        {orderId}
+      </td>
+      <td className="py-3 px-3 whitespace-nowrap text-center">${orderPrice}</td>
+      <td
+        className={`py-3 px-3 whitespace-nowrap text-center ${
+          paymentStatus === "Pending" ? "text-red-500" : ""
+        }`}
+      >
+        {paymentStatus}
+      </td>
+      <td
+        className={`py-3 px-3 whitespace-nowrap  text-center ${
+          orderStatus === "Pending" ? "text-red-500" : ""
+        }`}
+      >
+        {orderStatus}
+      </td>
+      <td className="py-3 px-3 whitespace-nowrap text-center">
+        <Link to={`/admin/dashboard/orders/${orderId}`} state={order}>
+          View
+        </Link>
+      </td>
+    </tr>
   );
 }
 
 export default function Orders() {
   return (
     <DashboardContainer>
-      <div className="shadow-lg pb-4 bg-white">
-        <TableHeader />
-        <div className="pt-2 px-4 lg:px-8 h-[48.4rem] overflow-auto">
+      <div className="shadow-lg bg-white ">
+        <OrdersTableHeader />
+        <div className="pt-2 table-custom-hight overflow-auto hide-scrollbar">
           <TableContainer>
-            <TableHead />
+            <OrdersTableHead />
 
             <TableBodyContainer>
               {ordersData.map((order) => {
                 return (
-                  <TableRow
+                  <OrdersTableRow
+                    key={order.id}
+                    order={order}
                     orderId={order.id}
-                    orderPrice={order.price}
+                    orderPrice={order.totalPrice}
                     orderStatus={order.orderStatus}
                     paymentStatus={order.paymentStatus}
-                    active={order.active}
                   />
                 );
               })}

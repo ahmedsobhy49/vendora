@@ -5,6 +5,9 @@ import TableContainer from "../../gen/TableContainer";
 import TableBodyContainer from "../../gen/TableBodyContainer";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { MdEditSquare } from "react-icons/md";
+import TableHeaderContainer from "../../gen/TableHeaderContainer";
+import SearchInput from "../../gen/SearchInput";
+import TableHeadContainer from "../../gen/TableHeadContainer";
 
 const categoryData = [
   {
@@ -84,9 +87,9 @@ export default function Category() {
         <div className="w-full h-full  ">
           <div className="flex flex-col gap-5 xl:flex-row ">
             {/* Category Table Section */}
-            <div className="h-full xl:w-3/5">
+            <div className="h-full xl:w-3/5 ">
               <CategoryTableHeader />
-              <div className="h-[49.4rem] overflow-auto p-[1.25rem]  shadow-md bg-white ">
+              <div className="table-custom-hight overflow-auto pt-2 shadow-md bg-white hide-scrollbar">
                 <TableContainer>
                   <CategoryTableHead />
                   <TableBodyContainer>
@@ -114,8 +117,8 @@ export default function Category() {
 
 function CategoryTableRow({ catId, catImage, catName }) {
   return (
-    <tr className="xl:h-20 text-xs text-gray-700 md:text-sm">
-      <td className="py-3 font-bold text-gray-700 whitespace-nowrap xl:w-5 text-center">
+    <tr className="xl:h-16 text-xs text-gray-700 md:text-sm even:bg-slate-100">
+      <td className="py-3 font-bold text-gray-700 whitespace-nowrap xl:w-5 text-center px-2">
         {catId}
       </td>
       <td className="px-[2.5rem] py-[0.75rem] text-center whitespace-nowrap xl:w-5">
@@ -126,7 +129,7 @@ function CategoryTableRow({ catId, catImage, catName }) {
       <td className="px-[2.5rem] py-[0.75rem] text-center whitespace-nowrap xl:w-5">
         {catName}
       </td>
-      <td className="py-3 text-center whitespace-nowrap gap-5 xl:w-5">
+      <td className="py-3 text-center whitespace-nowrap gap-5 xl:w-5 px-2">
         <button className="mr-[0.75rem]">
           <RiDeleteBin6Fill size={25} color="#f15313" />
         </button>
@@ -140,42 +143,30 @@ function CategoryTableRow({ catId, catImage, catName }) {
 
 function CategoryTableHeader() {
   return (
-    <div className="flex items-center justify-between p-[1rem] shadow-md bg-[#338ffb] lg:px-[2rem]">
-      <Input
-        inputClassName="w-[10.625rem] px-[0.75rem] py-[0.25rem] outline-none rounded-full sm:w-1/3 sm:py-[0.5rem] placeholder:text-[0.85rem] lg:placeholder:text-[1rem]"
-        placeholder="Search Category..."
-        id="search-category"
-        name="search-category"
-        type="search"
-      />
-    </div>
+    <TableHeaderContainer>
+      <SearchInput placeholder={"search category"} id={"search-category"} />
+    </TableHeaderContainer>
   );
 }
 
 function CategoryTableHead() {
   return (
-    <thead className="tracking-tighter text-gray-700 uppercase w-full text-[0.7rem] sm:text-[0.75rem] md:text-[0.77rem] lg:text-sm md:tracking-normal">
+    <TableHeadContainer>
       <tr>
-        <th scope="col" className="py-[0.5rem] text-center sm:pt-[1rem]">
+        <th scope="col" className="py-2 text-center">
           ID
         </th>
-        <th
-          scope="col"
-          className="px-[2.5rem] py-[0.5rem] text-center sm:pt-[1rem]"
-        >
+        <th scope="col" className="px-10 py-2 text-center ">
           Image
         </th>
-        <th
-          scope="col"
-          className="px-[2.5rem] py-[0.5rem] text-center sm:pt-[1rem]"
-        >
+        <th scope="col" className="px-10 py-2 text-center">
           Name
         </th>
-        <th scope="col" className="py-[0.5rem] text-center sm:pt-[1rem]">
+        <th scope="col" className="py-2 text-center ">
           Action
         </th>
       </tr>
-    </thead>
+    </TableHeadContainer>
   );
 }
 

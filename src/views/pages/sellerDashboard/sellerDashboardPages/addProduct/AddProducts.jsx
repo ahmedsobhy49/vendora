@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function SellerDashboard() {
+export default function AddProducts() {
   return <div></div>;
 }

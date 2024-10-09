@@ -10,6 +10,10 @@
   min-height: calc(100vh - 11rem);
 }
 
+.max-custom-hight {
+  min-height: calc(100vh - 11rem);
+}
+
 @media (min-width: 1024px) {
   .custom-hight {
     height: calc(100vh - 14rem);
@@ -30,4 +34,14 @@
 }
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+}
+
+.table-custom-hight {
+  height: calc(100vh - 203px);
+}
+
+@media (min-width: 1024px) {
+  .table-custom-hight {
+    height: calc(100vh - 217px);
+  }
 }
