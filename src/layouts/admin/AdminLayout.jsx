@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 import { Outlet, useLocation } from "react-router-dom";
-import ScrollToTop from "../../common/ScrollToTop";
+import ScrollToTopOnRoute from "../../common/ScrollToTopOnRoute";
 
 export default function AdminLayout() {
   const [showSideBar, setShowSideBar] = useState(false);
@@ -18,7 +18,7 @@ export default function AdminLayout() {
       <div className="md:ml-auto w-full md:w-[70%] lg:w-3/4 xl:w-4/5  ">
         <Header setShowSideBar={setShowSideBar} />
         <Outlet />
-        <ScrollToTop />
+        <ScrollToTopOnRoute />
       </div>
     </div>
   );
