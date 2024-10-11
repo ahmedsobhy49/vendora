@@ -10,19 +10,20 @@ import products from "../../../../../data/products.json";
 import TableHeadContainer from "../../../adminDashboard/gen/TableHeadContainer";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { MdEditSquare } from "react-icons/md";
-export default function AllProducts() {
+
+export default function DiscountProducts() {
   return (
     <DashboardContainer>
       <div>
-        <ProductTableHeader />
+        <DiscountProductTableHeader />
       </div>
       <div className="table-custom-hight overflow-auto bg-white hide-scrollbar">
         <TableContainer>
-          <ProductTableHead />
+          <DiscountProductTableHead />
           <TableBodyContainer>
             {products.products?.map((product) => {
               return (
-                <ProductTableRow
+                <DiscountProductTableRow
                   product={product}
                   key={product.id}
                   productId={product.id}
@@ -43,7 +44,7 @@ export default function AllProducts() {
   );
 }
 
-function ProductTableRow({
+function DiscountProductTableRow({
   productId,
   image,
   name,
@@ -109,7 +110,7 @@ function ProductTableRow({
   );
 }
 
-function ProductTableHead() {
+function DiscountProductTableHead() {
   return (
     <TableHeadContainer>
       <tr>
@@ -169,7 +170,7 @@ function ProductTableHead() {
   );
 }
 
-function ProductTableHeader() {
+function DiscountProductTableHeader() {
   return (
     <TableHeaderContainer>
       <SearchInput placeholder={"search product"} id={"search-product"} />

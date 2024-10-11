@@ -2,7 +2,6 @@ import React from "react";
 import DashboardContainer from "../../../../../common/DashboardContainer";
 import TableContainer from "../../gen/TableContainer";
 import TableBodyContainer from "../../gen/TableBodyContainer";
-import Input from "../../../../../common/Input";
 import { IoEyeOutline } from "react-icons/io5";
 import sellers from "../../../../../data/sellers.json";
 import { Link } from "react-router-dom";
@@ -61,7 +60,7 @@ function SellerTableRow({
   seller,
 }) {
   return (
-    <tr className="h-20 text-xs text-gray-700 md:text-sm even:bg-slate-50">
+    <tr className="h-20 text-xs text-gray-700 md:text-sm">
       <td className="py-3 font-bold text-gray-700 whitespace-nowrap xl:w-5 px-10">
         {sellerId}
       </td>

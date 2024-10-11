@@ -95,7 +95,7 @@ function DeactiveSellersTableRow({
   status,
 }) {
   return (
-    <tr className="h-20 text-xs text-gray-700 md:text-sm even:bg-slate-50">
+    <tr className="h-20 text-xs text-gray-700 md:text-sm ">
       <td className="px-2 py-3 font-bold text-gray-700 whitespace-nowrap xl:w-5 text-center">
         {sellerId}
       </td>

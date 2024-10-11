@@ -12,13 +12,13 @@ const AllProducts = lazy(() =>
     "../../views/pages/sellerDashboard/sellerDashboardPages/allProducts/AllProducts"
   )
 );
-const AddDiscount = lazy(() =>
+const DiscountProducts = lazy(() =>
   import(
-    "../../views/pages/sellerDashboard/sellerDashboardPages/addDiscount/AddDiscount"
+    "../../views/pages/sellerDashboard/sellerDashboardPages/discountProducts/DiscountProducts"
   )
 );
 const Orders = lazy(() =>
-  import("../../views/pages/adminDashboard/adminDashboardPages/orders/Orders")
+  import("../../views/pages/sellerDashboard/sellerDashboardPages/orders/Orders")
 );
 const Payments = lazy(() =>
   import(
@@ -73,10 +73,10 @@ const sellerRoutes = [
         ),
       },
       {
-        path: "/seller/dashboard/add-discount",
+        path: "/seller/dashboard/discount-products",
         element: (
           <CustomSuspense>
-            <AddDiscount />
+            <DiscountProducts />
           </CustomSuspense>
         ),
       },

@@ -144,7 +144,7 @@ function TableHead() {
 function TableRow({ requestId, ammount, requestStatus, date }) {
   return (
     <tr className="xl:h-16 text-xs text-gray-700 md:text-sm xl:text-[1rem] even:bg-slate-50">
-      <td className="py-3 whitespace-nowrap font-bold text-gray-500 text-center">
+      <td className="py-3 px-3 whitespace-nowrap font-bold text-gray-500 text-center">
         {requestId}
       </td>
       <td className="py-3 px-3 whitespace-nowrap text-center">${ammount}</td>
@@ -157,7 +157,7 @@ function TableRow({ requestId, ammount, requestStatus, date }) {
       </td>
       <td className="py-3 px-3 whitespace-nowrap text-center">{date}</td>
 
-      <td className=" py-3 whitespace-nowrap text-center">
+      <td className=" py-3  px-3  whitespace-nowrap text-center">
         <button className="bg-green-400 text-white p-2 tracking-wide rounded-full">
           Confirm
         </button>

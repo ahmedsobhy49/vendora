@@ -22,42 +22,43 @@ export default function OrderDetails() {
               <h4 className="text-gray-400 text-sm sm:text-[1rem] font-bold mb-6">
                 Products
               </h4>
+              <div className="max-h-[15rem] overflow-auto">
+                {allSellers.map((seller) => {
+                  return (
+                    <div key={seller.id}>
+                      <div>
+                        {seller.products.map((product) => {
+                          return (
+                            <div
+                              key={product.id}
+                              className="flex items-center gap-10 md:gap-16 mb-4"
+                            >
+                              <ProductImage src={product.image} />
+                              <div>
+                                <ProductName title={product.name} />
+                                <ProductDetailContainer>
+                                  <ProductDetailTitle title={"Seller"} />
+                                  <ProductDetailData data={seller.shopName} />
+                                </ProductDetailContainer>
 
-              {allSellers.map((seller) => {
-                return (
-                  <div key={seller.id}>
-                    <div>
-                      {seller.products.map((product) => {
-                        return (
-                          <div
-                            key={product.id}
-                            className="flex items-center gap-10 md:gap-16 mb-4"
-                          >
-                            <ProductImage src={product.image} />
-                            <div>
-                              <ProductName title={product.name} />
-                              <ProductDetailContainer>
-                                <ProductDetailTitle title={"Seller"} />
-                                <ProductDetailData data={seller.shopName} />
-                              </ProductDetailContainer>
+                                <ProductDetailContainer>
+                                  <ProductDetailTitle title={"Price"} />
+                                  <ProductDetailData data={product.price} />
+                                </ProductDetailContainer>
 
-                              <ProductDetailContainer>
-                                <ProductDetailTitle title={"Price"} />
-                                <ProductDetailData data={product.price} />
-                              </ProductDetailContainer>
-
-                              <ProductDetailContainer>
-                                <ProductDetailTitle title={"Quantity"} />
-                                <ProductDetailData data={product.quantity} />
-                              </ProductDetailContainer>
+                                <ProductDetailContainer>
+                                  <ProductDetailTitle title={"Quantity"} />
+                                  <ProductDetailData data={product.quantity} />
+                                </ProductDetailContainer>
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
           <div className="hidden xl:grid xl:grid-cols-1 xl:grid-rows-2 xl:gap-4">
@@ -134,19 +135,19 @@ function SellerDetails({ allSellers }) {
   return (
     <div className="bg-white p-6">
       <MainHeading title={"Sellers"} />
-      <div>
+      <div className="max-h-[25rem] overflow-auto">
         {allSellers.map((seller, index) => {
           return (
             <div className="mb-10 last:mb-0" key={seller.id}>
               <DetailContainer>
                 <DetailTitle title={`${index + 1}-${seller.shopName}`} />
               </DetailContainer>
-              <div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                 {seller.products.map((product) => {
                   return (
                     <div
                       key={product.id}
-                      className="flex items-center gap-10 md:gap-16 my-4"
+                      className="flex items-start gap-10 sm:gap-6 md:gap-10 2xl:gap-4  my-4"
                     >
                       <ProductImage src={product.image} />
                       <div>

@@ -33,8 +33,8 @@ const sellerNavigation = [
   {
     id: 3,
     icon: <MdDiscount />,
-    path: "/seller/dashboard/add-discount",
-    label: "Add Discount",
+    path: "/seller/dashboard/discount-products",
+    label: "Discount Products",
     role: "seller",
   },
   {
