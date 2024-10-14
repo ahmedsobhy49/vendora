@@ -1,0 +1,70 @@
+{
+  "orders": [
+    {
+      "id": 0,
+      "totalPrice": 100,
+      "orderStatus": "Pending",
+      "paymentStatus": "Pending",
+      "orderDate": "10/12/2024",
+      "toUser": {
+        "id": 10000,
+        "name": "mohsen",
+        "contant": {
+          "email": "mohsen@gmail.com",
+          "phone": "01002003022"
+        },
+        "address": {
+          "country": "usa",
+          "street": "13 coe street",
+          "state": "ca",
+          "apartment": "13"
+        }
+      },
+
+      "fromSellers": [
+        {
+          "id": 2,
+          "shopName": "EcoFusion Finds",
+          "products": [
+            {
+              "id": 3,
+              "name": "Denim Jacket",
+              "image": "https://img.mytheresa.com/1094/1238/100/jpeg/catalog/product/57/P00828985.jpg",
+              "category": "fashion",
+              "brand": "BrandC",
+              "price": 70,
+              "discount": 15,
+              "quantity": 3
+            },
+            {
+              "id": 11,
+              "name": "Graphic T-shirt",
+              "image": "https://m.media-amazon.com/images/I/51YN42heuKL._AC_SX679_.jpg",
+              "category": "fashion",
+              "brand": "BrandK",
+              "price": 25,
+              "discount": 5,
+              "quantity": 1
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "shopName": "Jewel Junction",
+          "products": [
+            {
+              "id": 8,
+              "name": "Classic Watch",
+              "image": "https://m.media-amazon.com/images/I/61akDsP1R6L._AC_SX679_.jpg",
+              "category": "accessories",
+              "brand": "BrandH",
+              "price": 120,
+              "discount": 20,
+              "quantity": 1
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

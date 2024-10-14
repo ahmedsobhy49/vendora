@@ -1,108 +1,38 @@
 {
   "sellers": [
     {
-      "id": 0,
-      "image": "https://static1.squarespace.com/static/656f4e4dababbd7c042c4946/657236350931ee4538eea52c/65baf15103d8ad2826032a8a/1727029299965/how-to-stop-being-a-people-pleaser-1_1.jpg?format=1500w",
-      "name": "James",
-      "email": "James@gmail.com",
-      "role": "Seller",
-      "paymentStatus": "pending",
-      "status": "deactive",
-      "shopName": "ShopSavvy",
-      "district": "ultara",
-      "division": "Dhaka",
-      "state": "Dhaka"
-    },
-    {
-      "id": 1,
-      "image": "https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg",
-      "name": "Michael",
-      "email": "Michael@gmail.com",
-      "role": "Seller",
-      "paymentStatus": "pending",
+      "_id": 1,
+      "name": "Awesome Seller",
+      "image": "https://politics.princeton.edu/sites/default/files/styles/square/public/images/p-5.jpeg?h=87dbaab7&itok=ub6jAL5Q",
+      "email": "seller@example.com",
+      "password": "hashed_password",
+      "role": "seller",
       "status": "active",
-      "shopName": "TrendyTrinkets",
-      "district": "ultara",
-      "division": "dhaka",
-      "state": "Dhaka"
-    },
-    {
-      "id": 2,
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPAEGNILM8eg7jxCzwEmNbTfK2kZ641aesGyh2Y7WEuO1EbYxRWyX9Sk5v3Ia_0F7eJ-8&usqp=CAU",
-      "name": "Robert",
-      "email": "Robert@gmail.com",
-      "role": "Seller",
-      "paymentStatus": "pending",
-      "status": "deactive",
-      "shopName": "EcoFusion Finds.",
-      "district": "ultara",
-      "division": "dhaka",
-      "state": "Dhaka"
-    },
-    {
-      "id": 3,
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTK4ghkUtQ_CT9RWX28kbXhcr3TrN_tKzwCUQ2EbZWDKdEsB-qmvtKVU3MjA7f7-qu3bL8&usqp=CAU",
-      "name": "John",
-      "email": "John@gmail.com",
-      "role": "Seller",
-      "paymentStatus": "pending",
-      "status": "active",
-      "shopName": "StyleSplash",
-      "district": "ultara",
-      "division": "dhaka",
-      "state": "Dhaka"
-    },
-    {
-      "id": 4,
-      "image": "https://ogletree.com/app/uploads/people/samantha-c-bragg.jpg",
-      "name": "Amelia",
-      "email": "Amelia@gmail.com",
-      "role": "Seller",
-      "paymentStatus": "pending",
-      "status": "deactive",
-      "shopName": "GourmetGlow",
-      "district": "ultara",
-      "division": "dhaka",
-      "state": "Dhaka"
-    },
-    {
-      "id": 5,
-      "image": "https://ogletree.com/app/uploads/people/kevin-j-kinney.jpg",
-      "name": "William",
-      "email": "William@gmail.com",
-      "role": "Seller",
-      "paymentStatus": "pending",
-      "status": "active",
-      "shopName": "ChicVoyage",
-      "district": "ultara",
-      "division": "dhaka",
-      "state": "Dhaka"
-    },
-    {
-      "id": 6,
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7uTGLupALvobZDvTdb5f_xNQNVYEJe57DTTqHfzAlFPKsGH0M30mbDPv91__OuelwSvY&usqp=CAU",
-      "name": "Thomas",
-      "email": "Thomas@gmail.com",
-      "role": "Seller",
-      "paymentStatus": "pending",
-      "status": "deactive",
-      "shopName": "Wanderlust Emporium",
-      "district": "ultara",
-      "division": "dhaka",
-      "state": "Dhaka"
-    },
-    {
-      "id": 7,
-      "image": "https://blog.stocksnap.io/content/images/2022/02/smiling-woman_W6GFOSFAXA.jpg",
-      "name": "Sophia",
-      "email": "Sophia@gmail.com",
-      "role": "Seller",
-      "paymentStatus": "pending",
-      "status": "active",
-      "shopName": "JewelJunction",
-      "district": "ultara",
-      "division": "dhaka",
-      "state": "Dhaka"
+      "phone": "123-456-7890",
+      "businessInfo": {
+        "companyName": "Awesome Clothing Co.",
+        "registrationNumber": "ABC123456",
+        "taxId": "TAX789456123"
+      },
+      "addressId": 1,
+      "bankDetails": {
+        "accountHolderName": "John Seller",
+        "bankName": "Best Bank",
+        "accountNumber": "123456789",
+        "routingNumber": "987654321",
+        "swiftCode": "SWFT12345"
+      },
+      "payoutHistory": [
+        {
+          "payoutId": "payout_001",
+          "amount": 500.0,
+          "status": "completed",
+          "createdAt": "2024-03-10T15:00:00Z",
+          "completedAt": "2024-03-11T10:00:00Z"
+        }
+      ],
+      "createdAt": "2024-01-01T10:00:00Z",
+      "updatedAt": "2024-10-10T12:00:00Z"
     }
   ]
 }

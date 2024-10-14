@@ -1,0 +1,19 @@
+{
+  "parentCategories": [
+    {
+      "_id": 0,
+      "image": "https://banner2.cleanpng.com/20231221/qrc/transparent-icon-yellow-shirt-dotted-fabric-v-neckline-shirt-t-yellow-fabric-shirt-with-dotted-design-v-neck-1710964808399.webp",
+      "name": "fashion"
+    },
+    {
+      "_id": 1,
+      "image": "https://image.khaleejtimes.com/?uuid=c3f0e50a-2059-4fbf-bfd8-3ce6df95c6cc&function=cropresize&type=preview&source=false&q=75&crop_w=0.99999&crop_h=0.77055&x=0&y=0&width=1200&height=675",
+      "name": "accessories"
+    },
+    {
+      "_id": 2,
+      "image": "https://globerec.com/wp-content/uploads/2022/10/consumer.jpeg",
+      "name": "electronics"
+    }
+  ]
+}

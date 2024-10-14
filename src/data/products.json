@@ -1,84 +1,67 @@
 {
   "products": [
     {
-      "id": 0,
-      "image": "https://static1.squarespace.com/static/656f4e4dababbd7c042c4946/657236350931ee4538eea52c/65baf15103d8ad2826032a8a/1727029299965/how-to-stop-being-a-people-pleaser-1_1.jpg?format=1500w",
-      "name": "James",
-      "category": "James@gmail.com",
-      "brand": "Seller",
-      "price": "pending",
-      "discount": "deactive",
-      "stock": "ShopSavvy"
-    },
-    {
-      "id": 1,
-      "image": "https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg",
-      "name": "Michael",
-      "category": "Michael@gmail.com",
-      "brand": "Seller",
-      "price": "pending",
-      "discount": "active",
-      "stock": "TrendyTrinkets"
-    },
-    {
-      "id": 2,
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPAEGNILM8eg7jxCzwEmNbTfK2kZ641aesGyh2Y7WEuO1EbYxRWyX9Sk5v3Ia_0F7eJ-8&usqp=CAU",
-      "name": "Robert",
-      "category": "Robert@gmail.com",
-      "brand": "Seller",
-      "price": "pending",
-      "discount": "deactive",
-      "stock": "EcoFusion Finds."
-    },
-    {
-      "id": 3,
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTK4ghkUtQ_CT9RWX28kbXhcr3TrN_tKzwCUQ2EbZWDKdEsB-qmvtKVU3MjA7f7-qu3bL8&usqp=CAU",
-      "name": "John",
-      "category": "John@gmail.com",
-      "brand": "Seller",
-      "price": "pending",
-      "discount": "active",
-      "stock": "StyleSplash"
-    },
-    {
-      "id": 4,
-      "image": "https://ogletree.com/app/uploads/people/samantha-c-bragg.jpg",
-      "name": "Amelia",
-      "category": "Amelia@gmail.com",
-      "brand": "Seller",
-      "price": "pending",
-      "discount": "deactive",
-      "stock": "GourmetGlow"
-    },
-    {
-      "id": 5,
-      "image": "https://ogletree.com/app/uploads/people/kevin-j-kinney.jpg",
-      "name": "William",
-      "category": "William@gmail.com",
-      "brand": "Seller",
-      "price": "pending",
-      "discount": "active",
-      "stock": "ChicVoyage"
-    },
-    {
-      "id": 6,
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7uTGLupALvobZDvTdb5f_xNQNVYEJe57DTTqHfzAlFPKsGH0M30mbDPv91__OuelwSvY&usqp=CAU",
-      "name": "Thomas",
-      "category": "Thomas@gmail.com",
-      "brand": "Seller",
-      "price": "pending",
-      "discount": "deactive",
-      "stock": "Wanderlust Emporium"
-    },
-    {
-      "id": 7,
-      "image": "https://blog.stocksnap.io/content/images/2022/02/smiling-woman_W6GFOSFAXA.jpg",
-      "name": "Sophia",
-      "category": "Sophia@gmail.com",
-      "brand": "Seller",
-      "price": "pending",
-      "discount": "active",
-      "stock": "JewelJunction"
+      "_id": 1,
+      "name": "Tshirt Long Sleeve",
+      "description": "A comfortable, stylish long sleeve t-shirt perfect for casual wear.",
+      "price": 30,
+      "brandId": 1,
+      "sellerId": 0,
+      "discount": {
+        "amount": 10,
+        "startDate": "2024-10-01T00:00:00Z",
+        "endDate": "2024-10-15T23:59:59Z"
+      },
+      "images": [
+        {
+          "url": "https://zaahe.com/wp-content/uploads/2024/02/1-11-3.png",
+          "altText": "Front view of Tshirt Long Sleeve"
+        }
+      ],
+      "category": {
+        "parentId": 0,
+        "categoryId": 0,
+        "subCategoryId": 2
+      },
+      "stock": 40,
+      "status": "active",
+      "ratings": {
+        "averageRating": 4.5,
+        "reviewsCount": 50
+      },
+      "reviews": [
+        {
+          "reviewsId": 0
+        }
+      ],
+      "tags": ["t-shirt", "long sleeve", "casual"],
+      "sku": "TSHIRT123",
+      "variations": [
+        {
+          "colors": ["black", "white", "blue"],
+          "sizes": ["xs", "s", "m", "l", "xl"],
+          "stock": {
+            "xs": 5,
+            "s": 4,
+            "m": 4,
+            "l": 19,
+            "xl": 8
+          }
+        }
+      ],
+      "dimensions": {
+        "weight": 0.3,
+        "length": 25,
+        "width": 20,
+        "height": 5
+      },
+      "shipping": {
+        "freeShipping": true,
+        "shippingCost": 5,
+        "handlingTime": 2
+      },
+      "createdAt": "2024-08-15T12:00:00Z",
+      "updatedAt": "2024-10-10T12:00:00Z"
     }
   ]
 }

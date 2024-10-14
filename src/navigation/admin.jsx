@@ -26,7 +26,7 @@ const adminNavigation = [
     id: 2,
     icon: <BiSolidCategory />,
     path: "/admin/dashboard/category",
-    label: "Category",
+    label: "Categories",
     role: "admin",
   },
   {

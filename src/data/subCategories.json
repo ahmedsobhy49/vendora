@@ -1,0 +1,346 @@
+{
+  "subCategories": [
+    {
+      "_id": 0,
+      "name": "shirts",
+      "slug": "men-shirts",
+      "gender": "men"
+    },
+    {
+      "_id": 1,
+      "name": "pants",
+      "slug": "men-pants",
+      "gender": "men"
+    },
+    {
+      "_id": 2,
+      "name": "t-shirts",
+      "slug": "men-t-shirts",
+      "gender": "men"
+    },
+    {
+      "_id": 3,
+      "name": "shirts",
+      "slug": "women-shirts",
+      "gender": "women"
+    },
+    {
+      "_id": 4,
+      "name": "pants",
+      "slug": "women-pants",
+      "gender": "women"
+    },
+    {
+      "_id": 5,
+      "name": "t-shirts",
+      "slug": "women-t-shirts",
+      "gender": "women"
+    },
+    {
+      "_id": 6,
+      "name": "watches",
+      "slug": "men-watches",
+      "gender": "men"
+    },
+    {
+      "_id": 7,
+      "name": "watches",
+      "slug": "women-watches",
+      "gender": "women"
+    },
+    {
+      "_id": 8,
+      "name": "belts",
+      "slug": "men-belts",
+      "gender": "men"
+    },
+    {
+      "_id": 9,
+      "name": "sunglasses",
+      "slug": "men-sunglasses",
+      "gender": "men"
+    },
+    {
+      "_id": 10,
+      "name": "handbags",
+      "slug": "women-handbags",
+      "gender": "women"
+    },
+    {
+      "_id": 10,
+      "name": "jewelry",
+      "slug": "women-jewelry",
+      "gender": "women"
+    },
+    {
+      "_id": 11,
+      "name": "smartphones",
+      "slug": "smartphones",
+      "gender": "unisex"
+    },
+    {
+      "_id": 12,
+      "name": "laptops",
+      "slug": "laptops",
+      "gender": "unisex"
+    },
+    {
+      "_id": 13,
+      "name": "headphones",
+      "slug": "headphones",
+      "gender": "unisex"
+    },
+    {
+      "_id": 14,
+      "name": "polo shirts",
+      "slug": "men-polo-shirts",
+      "gender": "men"
+    },
+    {
+      "_id": 15,
+      "name": "hoodies",
+      "slug": "men-hoodies",
+      "gender": "men"
+    },
+    {
+      "_id": 16,
+      "name": "jackets",
+      "slug": "men-jackets",
+      "gender": "men"
+    },
+    {
+      "_id": 17,
+      "name": "blazers",
+      "slug": "men-blazers",
+      "gender": "men"
+    },
+    {
+      "_id": 18,
+      "name": "jeans",
+      "slug": "men-jeans",
+      "gender": "men"
+    },
+    {
+      "_id": 19,
+      "name": "chinos",
+      "slug": "men-chinos",
+      "gender": "men"
+    },
+    {
+      "_id": 20,
+      "name": "joggers",
+      "slug": "men-joggers",
+      "gender": "men"
+    },
+    {
+      "_id": 21,
+      "name": "cargo pants",
+      "slug": "men-cargo-pants",
+      "gender": "men"
+    },
+    {
+      "_id": 22,
+      "name": "shorts",
+      "slug": "men-shorts",
+      "gender": "men"
+    },
+    {
+      "_id": 23,
+      "name": "coats",
+      "slug": "men-coats",
+      "gender": "men"
+    },
+    {
+      "_id": 24,
+      "name": "denim jackets",
+      "slug": "men-denim-jackets",
+      "gender": "men"
+    },
+    {
+      "_id": 25,
+      "name": "footwear",
+      "slug": "men-footwear",
+      "gender": "men"
+    },
+    {
+      "_id": 26,
+      "name": "hats",
+      "slug": "men-hats",
+      "gender": "men"
+    },
+    {
+      "_id": 27,
+      "name": "caps",
+      "slug": "men-caps",
+      "gender": "men"
+    },
+    {
+      "_id": 28,
+      "name": "swimwear",
+      "slug": "men-swimwear",
+      "gender": "men"
+    },
+    {
+      "_id": 29,
+      "name": "dresses",
+      "slug": "women-dresses",
+      "gender": "women"
+    },
+    {
+      "_id": 30,
+      "name": "tops",
+      "slug": "women-tops",
+      "gender": "women"
+    },
+    {
+      "_id": 31,
+      "name": "blouses",
+      "slug": "women-blouses",
+      "gender": "women"
+    },
+    {
+      "_id": 32,
+      "name": "t-shirts",
+      "slug": "women-t-shirts",
+      "gender": "women"
+    },
+    {
+      "_id": 33,
+      "name": "sweaters",
+      "slug": "women-sweaters",
+      "gender": "women"
+    },
+    {
+      "_id": 34,
+      "name": "hoodies",
+      "slug": "women-hoodies",
+      "gender": "women"
+    },
+    {
+      "_id": 35,
+      "name": "jackets",
+      "slug": "women-jackets",
+      "gender": "women"
+    },
+    {
+      "_id": 36,
+      "name": "blazers",
+      "slug": "women-blazers",
+      "gender": "women"
+    },
+    {
+      "_id": 37,
+      "name": "jeans",
+      "slug": "women-jeans",
+      "gender": "women"
+    },
+    {
+      "_id": 38,
+      "name": "leggings",
+      "slug": "women-leggings",
+      "gender": "women"
+    },
+    {
+      "_id": 39,
+      "name": "chinos",
+      "slug": "women-chinos",
+      "gender": "women"
+    },
+    {
+      "_id": 40,
+      "name": "trousers",
+      "slug": "women-trousers",
+      "gender": "women"
+    },
+    {
+      "_id": 41,
+      "name": "skirts",
+      "slug": "women-skirts",
+      "gender": "women"
+    },
+    {
+      "_id": 42,
+      "name": "shorts",
+      "slug": "women-shorts",
+      "gender": "women"
+    },
+    {
+      "_id": 43,
+      "name": "coats",
+      "slug": "women-coats",
+      "gender": "women"
+    },
+    {
+      "_id": 44,
+      "name": "denim jackets",
+      "slug": "women-denim-jackets",
+      "gender": "women"
+    },
+    {
+      "_id": 45,
+      "name": "activewear",
+      "slug": "women-activewear",
+      "gender": "women"
+    },
+    {
+      "_id": 46,
+      "name": "lingerie",
+      "slug": "women-lingerie",
+      "gender": "women"
+    },
+    {
+      "_id": 47,
+      "name": "swimwear",
+      "slug": "women-swimwear",
+      "gender": "women"
+    },
+    {
+      "_id": 48,
+      "name": "footwear",
+      "slug": "women-footwear",
+      "gender": "women"
+    },
+    {
+      "_id": 49,
+      "name": "bags",
+      "slug": "women-bags",
+      "gender": "women"
+    },
+    {
+      "_id": 50,
+      "name": "jewelry",
+      "slug": "women-jewelry",
+      "gender": "women"
+    },
+    {
+      "_id": 51,
+      "name": "watches",
+      "slug": "women-watches",
+      "gender": "women"
+    },
+    {
+      "_id": 52,
+      "name": "sunglasses",
+      "slug": "women-sunglasses",
+      "gender": "women"
+    },
+    {
+      "_id": 53,
+      "name": "scarves",
+      "slug": "women-scarves",
+      "gender": "women"
+    },
+    {
+      "_id": 54,
+      "name": "belts",
+      "slug": "women-belts",
+      "gender": "women"
+    },
+    {
+      "_id": 55,
+      "name": "hats",
+      "slug": "women-hats",
+      "gender": "women"
+    }
+  ]
+}

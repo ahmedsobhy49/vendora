@@ -1,0 +1,14 @@
+{
+  "cart": [
+    {
+      "id": "0",
+      "customerId": 0,
+      "products": [
+        {
+          "productId": 1,
+          "quantity": 2
+        }
+      ]
+    }
+  ]
+}

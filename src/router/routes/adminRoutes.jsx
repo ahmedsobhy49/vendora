@@ -45,6 +45,12 @@ const SellersRequest = lazy(() =>
   )
 );
 
+const CategoriesInfo = lazy(() =>
+  import(
+    "../../views/pages/adminDashboard/adminDashboardPages/category/CategoriesInfo"
+  )
+);
+
 const adminRoutes = [
   {
     element: <AdminLayout />,
@@ -81,6 +87,14 @@ const adminRoutes = [
         element: (
           <CustomSuspense>
             <Category />
+          </CustomSuspense>
+        ),
+      },
+      {
+        path: "/admin/dashboard/category/:categoryId",
+        element: (
+          <CustomSuspense>
+            <CategoriesInfo />
           </CustomSuspense>
         ),
       },

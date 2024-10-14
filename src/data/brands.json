@@ -1,0 +1,14 @@
+{
+  "brands": [
+    {
+      "id": 0,
+      "name": "apple",
+      "parendCategoryId": 2
+    },
+    {
+      "id": 1,
+      "name": "defacto",
+      "parendCategoryId": 0
+    }
+  ]
+}

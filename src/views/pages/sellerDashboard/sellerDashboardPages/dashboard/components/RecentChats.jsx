@@ -113,10 +113,8 @@ function ChatMessage({ name, time, message, avatar }) {
           <span className="text-sm font-semibold text-gray-900">{name}</span>
           <span className="text-sm font-normal text-gray-500">{time}</span>
         </div>
-        <div className="flex flex-col leading-1.5 p-4 border-gray-200 bg-[#1be395] rounded-e-xl rounded-es-xl">
-          <p className="text-sm font-normal text-gray-900 dark:text-white">
-            {message}
-          </p>
+        <div className="flex flex-col leading-1.5 p-4 border-gray-200 bg-blue-100 rounded-e-xl rounded-es-xl">
+          <p className="text-sm font-normal text-gray-900">{message}</p>
         </div>
       </div>
     </li>

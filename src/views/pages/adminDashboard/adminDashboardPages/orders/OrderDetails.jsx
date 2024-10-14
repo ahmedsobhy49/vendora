@@ -99,7 +99,7 @@ function ProductDetailTitle({ title }) {
   return <h5 className="text-gray-500 text-sm font-bold">{title}:</h5>;
 }
 function ProductDetailData({ data }) {
-  return <p className="text-gray-600 text-xs sm:text-sm">{data}</p>;
+  return <p className="text-gray-600 text-xs sm:text-sm capitalize">{data}</p>;
 }
 function ProductDetailContainer({ children }) {
   return <div className="flex items-center gap-2">{children}</div>;
@@ -182,14 +182,14 @@ function ShippingAdress({ order }) {
       <div className="flex items-center justify-between">
         <div>
           <p>
-            <span>{order.toUser.address.apartment}</span>
-            <span>{order.toUser.address.street}</span>
+            <span>{order?.toUser?.address?.apartment}</span>
+            <span className="capitalize">{order?.toUser?.address?.street}</span>
           </p>
-          <p>{order.toUser.address.state} </p>
-          <p>{order.toUser.address.country}</p>
+          <p className="uppercase">{order?.toUser?.address?.state} </p>
+          <p className="uppercase">{order?.toUser?.address?.country}</p>
         </div>
         <div>
-          <LiaShippingFastSolid size={130} color="#9ca3af" />
+          <LiaShippingFastSolid size={130} color="#e2e8f0" />
         </div>
       </div>
     </div>
@@ -227,7 +227,7 @@ function OrderInfo({ order }) {
       <div className="grid gird-cols-1 gap-2 mb-8">
         <DetailContainer>
           <DetailTitle title={"Order Id"} />
-          <DetailData data={order.id} />
+          <DetailData data={`#${order.id}`} />
         </DetailContainer>
 
         <DetailContainer>

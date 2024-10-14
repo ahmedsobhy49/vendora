@@ -117,7 +117,7 @@ export default function Statistics() {
 
   return (
     <div className=" xl:col-span-2 bg-white shadow-md w-full ">
-      <div className="w-full h-full shadow px-4 p md:p-6">
+      <div className="w-full h-full shadow px-4  md:p-6">
         <div className="mt-10">
           <Chart type="bar" options={state.options} series={state.series} />
         </div>

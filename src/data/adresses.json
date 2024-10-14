@@ -1,0 +1,28 @@
+{
+  "addresses": [
+    {
+      "_id": "address_001",
+      "userId": "customer_001",
+      "type": "shipping",
+      "street": "123 Main St",
+      "city": "New York",
+      "state": "NY",
+      "zip": "10001",
+      "country": "USA",
+      "createdAt": "2023-01-01T10:00:00Z",
+      "updatedAt": "2023-10-10T12:00:00Z"
+    },
+    {
+      "_id": "address_002",
+      "userId": 1,
+      "type": "business",
+      "street": "456 Seller St",
+      "city": "Los Angeles",
+      "state": "CA",
+      "zip": "90001",
+      "country": "USA",
+      "createdAt": "2024-01-01T10:00:00Z",
+      "updatedAt": "2024-10-10T12:00:00Z"
+    }
+  ]
+}

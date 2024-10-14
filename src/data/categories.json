@@ -1,0 +1,59 @@
+{
+  "categories": [
+    {
+      "_id": 0,
+      "name": "men's fashion",
+      "topBrands": "",
+      "slug": "men-fashion",
+      "parentcategoryid": 0,
+      "subcategoriesid": [
+        0, 1, 2, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28
+      ],
+      "createdat": "2024-08-01T10:00:00Z",
+      "updatedat": "2024-10-10T12:00:00Z"
+    },
+    {
+      "_id": 1,
+      "name": "women's fashion",
+      "topBrands": "",
+      "slug": "women-fashion",
+      "parentcategoryid": 0,
+      "subcategoriesid": [
+        3, 4, 5, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44,
+        45, 46, 47, 48
+      ],
+      "createdat": "2024-08-01T10:00:00Z",
+      "updatedat": "2024-10-10T12:00:00Z"
+    },
+    {
+      "_id": 2,
+      "name": "men's accessories",
+      "topBrands": "",
+      "slug": "men-accessories",
+      "parentcategoryid": 1,
+      "subcategoriesid": [6, 8, 9, 26, 27],
+      "createdat": "2024-08-01T10:00:00Z",
+      "updatedat": "2024-10-10T12:00:00Z"
+    },
+    {
+      "_id": 3,
+      "name": "women's accessories",
+      "topBrands": "",
+      "slug": "women-accessories",
+      "parentcategoryid": 1,
+      "subcategoriesid": [10, 49, 50, 51, 52, 53, 54, 55],
+      "createdat": "2024-08-01T10:00:00Z",
+      "updatedat": "2024-10-10T12:00:00Z"
+    },
+    {
+      "_id": 4,
+      "name": "electronics",
+      "topBrands": "",
+      "slug": "electronics",
+      "parentcategoryid": 2,
+      "subcategoriesid": [11, 12, 13],
+      "createdat": "2024-08-01T10:00:00Z",
+      "updatedat": "2024-10-10T12:00:00Z"
+    }
+  ]
+}
