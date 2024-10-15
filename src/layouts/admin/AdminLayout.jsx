@@ -13,7 +13,7 @@ export default function AdminLayout() {
   }, [location.pathname, setShowSideBar]);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen ">
       <Sidebar showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
       <div className="md:ml-auto w-full md:w-[70%] lg:w-3/4 xl:w-4/5  ">
         <Header setShowSideBar={setShowSideBar} />

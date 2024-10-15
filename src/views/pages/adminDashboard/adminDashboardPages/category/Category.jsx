@@ -13,8 +13,6 @@ export default function Category() {
   const [parentCategories, setParentCategories] = useState([]);
   const [allParentCategories, setAllParentCategories] = useState([]); // Holds the original data
 
-  console.log(parentCategories);
-
   async function getAllParentCategories() {
     const res = await api.get("/category/get-all-parent-categories");
     setParentCategories(res.data.categories);
@@ -114,7 +112,7 @@ function CategoryForm({ getAllParentCategories }) {
       formData.append("image", values.image);
 
       try {
-        const res = await api.post("/category/add/parent-category", formData);
+        const res = await api.post("/category/add/category", formData);
         console.log(res);
         formik.resetForm();
         getAllParentCategories();
@@ -242,7 +240,7 @@ function DisktopTable({ showingFrom, showingTo, parentCategories }) {
                 </td>
                 <td className="text-center py-[1.12rem] px-4">
                   <Link
-                    to={`/admin/dashboard/category/${category.id}`}
+                    to={`/admin/dashboard/category/${category._id}`}
                     state={category}
                     className="text-green-500 text-center flex items-center justify-center"
                   >
