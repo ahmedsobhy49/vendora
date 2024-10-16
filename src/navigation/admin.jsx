@@ -6,6 +6,7 @@ import { PiUsersThreeFill } from "react-icons/pi";
 import { MdPayments } from "react-icons/md";
 import { FaUserXmark, FaCodePullRequest } from "react-icons/fa6";
 import { BsChatTextFill } from "react-icons/bs";
+import { TbCircleLetterBFilled } from "react-icons/tb";
 
 const adminNavigation = [
   {
@@ -31,34 +32,41 @@ const adminNavigation = [
   },
   {
     id: 3,
+    icon: <TbCircleLetterBFilled />,
+    path: "/admin/dashboard/top-brands",
+    label: "Top Brands",
+    role: "admin",
+  },
+  {
+    id: 4,
     icon: <PiUsersThreeFill />,
     path: "/admin/dashboard/sellers",
     label: "Sellers",
     role: "admin",
   },
   {
-    id: 4,
+    id: 5,
     icon: <MdPayments />,
     path: "/admin/dashboard/payment-request",
     label: "Payment Request",
     role: "admin",
   },
   {
-    id: 5,
+    id: 6,
     icon: <FaUserXmark />,
     path: "/admin/dashboard/deactive-seller",
     label: "Deactive Sellers",
     role: "admin",
   },
   {
-    id: 6,
+    id: 7,
     icon: <FaCodePullRequest />,
     path: "/admin/dashboard/sellers-request",
     label: "Sellers Request",
     role: "admin",
   },
   {
-    id: 7,
+    id: 8,
     icon: <BsChatTextFill />,
     path: "/admin/dashboard/chat-seller",
     label: "Live Chat",

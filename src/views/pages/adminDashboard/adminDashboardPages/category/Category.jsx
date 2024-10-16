@@ -14,7 +14,7 @@ export default function Category() {
   const [allParentCategories, setAllParentCategories] = useState([]); // Holds the original data
 
   async function getAllParentCategories() {
-    const res = await api.get("/category/get-all-parent-categories");
+    const res = await api.get("/category/all-parent-categories");
     setParentCategories(res.data.categories);
     setAllParentCategories(res.data.categories); // Store the original data here
   }

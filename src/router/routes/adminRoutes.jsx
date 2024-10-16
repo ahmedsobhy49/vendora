@@ -51,6 +51,10 @@ const CategoriesInfo = lazy(() =>
   )
 );
 
+const Brands = lazy(() =>
+  import("../../views/pages/adminDashboard/adminDashboardPages/brands/Brands")
+);
+
 const adminRoutes = [
   {
     element: <AdminLayout />,
@@ -87,6 +91,14 @@ const adminRoutes = [
         element: (
           <CustomSuspense>
             <Category />
+          </CustomSuspense>
+        ),
+      },
+      {
+        path: "/admin/dashboard/top-brands",
+        element: (
+          <CustomSuspense>
+            <Brands />
           </CustomSuspense>
         ),
       },
