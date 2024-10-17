@@ -22,7 +22,7 @@ export const AddSubcategoryModal = ({ isOpen, onClose, category }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
-      <div className="bg-white rounded-lg p-6 translate-x-1/3">
+      <div className="bg-white rounded-lg p-6 md:translate-x-1/3">
         <h3 className="text-lg font-bold mb-4">
           Add Subcategory for {category.label || category.name}
         </h3>
