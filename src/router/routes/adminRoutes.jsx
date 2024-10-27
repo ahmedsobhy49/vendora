@@ -2,7 +2,8 @@ import { lazy } from "react";
 import AdminLayout from "../../layouts/admin/AdminLayout";
 import CustomSuspense from "../../common/CustomSuspense";
 import OrderDetails from "../../views/pages/adminDashboard/adminDashboardPages/orders/OrderDetails";
-
+import {jwtDecode} from 'jwt-decode';
+import { Navigate } from "react-router-dom";
 const Dashboard = lazy(() =>
   import(
     "../../views/pages/adminDashboard/adminDashboardPages/dashboard/Dashboard"
@@ -57,7 +58,9 @@ const Brands = lazy(() =>
 
 const adminRoutes = [
   {
-    element: <AdminLayout />,
+    element:<ProtectAdminRoutes>
+      <AdminLayout />
+    </ProtectAdminRoutes> ,
     role: "admin",
 
     children: [
@@ -161,5 +164,31 @@ const adminRoutes = [
     ],
   },
 ];
+
+
+
+function ProtectAdminRoutes({ children }) {
+
+  const token = localStorage.getItem("accessToken"); // Get the token directly
+
+  // Check if the token exists
+  if (!token) {
+    return <Navigate to="/admin/login" />; // Redirect to login if no token
+  }
+
+  try {
+    const decodedToken = jwtDecode(token); // Decode the token
+
+    // Example: Check if the user has the admin role
+    if (decodedToken.role !== 'admin') {
+      return <Navigate to="/unauthorized" /> // Redirect if not admin
+    }
+
+    return children; // Render the children if admin
+  } catch (error) {
+    console.error("Invalid token", error);
+    return <Navigate to="/admin/login" />; // Redirect to login if token is invalid
+  }
+}
 
 export default adminRoutes;

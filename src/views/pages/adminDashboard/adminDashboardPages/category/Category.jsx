@@ -14,7 +14,7 @@ export default function Category() {
   const [allParentCategories, setAllParentCategories] = useState([]); // Holds the original data
 
   async function getAllParentCategories() {
-    const res = await api.get("/category/all-parent-categories");
+    const res = await api.get("/categories/parents");
     setParentCategories(res.data.categories);
     setAllParentCategories(res.data.categories); // Store the original data here
   }
@@ -112,7 +112,7 @@ function CategoryForm({ getAllParentCategories }) {
       formData.append("image", values.image);
 
       try {
-        const res = await api.post("/category/add/category", formData);
+        const res = await api.post("/category", formData);
         console.log(res);
         formik.resetForm();
         getAllParentCategories();

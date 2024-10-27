@@ -7,29 +7,36 @@ import api from "../../../../../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Select from "react-select";
-
 export default function Brands() {
   const [brands, setBrands] = useState([]);
+  const [originalBrands, setOriginalBrands] = useState([]); // New state for original brands
   const [categories, setCategories] = useState([]);
+
   async function getAllBrands() {
-    const res = await api.get("/brand/all-brands");
+    const res = await api.get("/brands");
     setBrands(res.data.brands);
+    setOriginalBrands(res.data.brands); // Store the original brands
   }
 
-  async function getAllCategoris() {
-    const res = await api.get("/category/first-two-levels-categories");
+  async function getAllParentCategories() {
+    const res = await api.get("/categories/parents");
     setCategories(res.data.categories);
   }
 
   useEffect(() => {
     getAllBrands();
-    getAllCategoris();
+    getAllParentCategories();
   }, []);
+
   return (
     <DashboardContainer>
       <div className="flex flex-col gap-5 xl:flex-row h-full">
         <div className="xl:w-3/5 w-full">
-          <BrandsTable brands={brands} setBrands={setBrands} />
+          <BrandsTable
+            brands={brands}
+            setBrands={setBrands}
+            originalBrands={originalBrands}
+          />
         </div>
         <div className="xl:w-2/5 w-full flex">
           <div className="w-full rounded-lg flex flex-col">
@@ -40,7 +47,8 @@ export default function Brands() {
     </DashboardContainer>
   );
 }
-function BrandsTable({ brands, setBrands }) {
+
+function BrandsTable({ brands, setBrands, originalBrands }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [entriesNum, setEntriesNum] = useState(4);
   const [currentPage, setCurrentPage] = useState(1);
@@ -60,13 +68,12 @@ function BrandsTable({ brands, setBrands }) {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           setCurrentPage={setCurrentPage}
-          brands={brands}
           setBrands={setBrands}
+          originalBrands={originalBrands} // Pass original brands
         />
         <DisktopTable
           showingFrom={showingFrom}
           showingTo={showingTo}
-          searchQuery={searchQuery}
           brands={brands}
         />
         <Pagination
@@ -82,20 +89,48 @@ function BrandsTable({ brands, setBrands }) {
   );
 }
 
+function BrandsTableHeader({
+  searchQuery,
+  setSearchQuery,
+  setBrands,
+  originalBrands,
+  setCurrentPage,
+}) {
+  return (
+    <div>
+      <div className="w-full">
+        <input
+          type="search"
+          className="w-full px-4 py-2 rounded-lg mb-2 outline-none  md:py-3"
+          placeholder="Search category by Name..."
+          value={searchQuery}
+          onChange={(e) => {
+            const query = e.target.value;
+            setSearchQuery(query);
+            const filteredData = originalBrands.filter((brand) => {
+              return brand.name.toLowerCase().includes(query.toLowerCase());
+            });
+
+            setBrands(filteredData); // Update the filtered brands
+            setCurrentPage(1); // Reset the pagination
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
 function BrandsForm({ getAllBrands, categories }) {
-  const categoryOptions = categories.flatMap((category) => [
-    { label: category.name, value: category._id }, // Main category
-    ...category.subcategories.map((subcategory) => ({
-      label: subcategory.name, // Displaying hierarchy
-      value: subcategory._id,
-    })),
-  ]);
+  const categoryOptions = categories.map((category) => ({
+    label: category.name,
+    value: category._id,
+  }));
 
   const formik = useFormik({
     initialValues: {
       name: "",
       logo: null,
-      categoryIds: [], // Add categoryIds field to formik
+      categoryId: "", // Single category ID instead of array
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Brand name is required"),
@@ -109,21 +144,20 @@ function BrandsForm({ getAllBrands, categories }) {
               value.type === "image/webp")
           );
         }),
-      categoryIds: Yup.array().min(1, "At least one category must be selected"),
+      categoryId: Yup.string().required("A category must be selected"),
     }),
     onSubmit: async (values) => {
       const formData = new FormData();
       formData.append("name", values.name);
       formData.append("logo", values.logo);
-      formData.append("categoryIds", values.categoryIds.join(",")); // Send category IDs as a comma-separated string
+      formData.append("categoryId", values.categoryId); // Single category ID
 
       try {
-        const res = await api.post("/brand/add-brand", formData, {
+        const res = await api.post("/brands", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         console.log(res);
         formik.resetForm();
-        formik.setFieldValue("categoryIds", []);
         getAllBrands();
       } catch (error) {
         console.error(
@@ -139,11 +173,11 @@ function BrandsForm({ getAllBrands, categories }) {
       className="w-full bg-white shadow-md p-4 rounded-lg flex-grow"
       onSubmit={formik.handleSubmit}
     >
-      <div className="flex flex-wrap -mx-3 mb-6 xl:mb-0">
+      <div className="flex flex-wrap -mx-3 mb-6 xl:mb-0 ">
         <div className="w-full md:w-full px-3 mb-6">
           <label
             className="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2"
-            htmlFor="category_name"
+            htmlFor="brand_name"
           >
             Brand Name
           </label>
@@ -169,32 +203,28 @@ function BrandsForm({ getAllBrands, categories }) {
 
         <div className="w-full md:w-full px-3 mb-6">
           <Select
-            isMulti
-            name="categories"
+            name="categoryId"
             options={categoryOptions}
-            className="basic-multi-select"
+            className="basic-single-select capitalize"
             classNamePrefix="select"
-            placeholder="Select categories"
-            value={categoryOptions.filter((option) =>
-              formik.values.categoryIds.includes(option.value)
+            placeholder="Select a category"
+            value={categoryOptions.find(
+              (option) => option.value === formik.values.categoryId
             )}
-            onChange={(selectedOptions) => {
-              formik.setFieldValue(
-                "categoryIds",
-                selectedOptions ? selectedOptions.map((opt) => opt.value) : []
-              );
-            }}
+            onChange={(selectedOption) =>
+              formik.setFieldValue("categoryId", selectedOption.value)
+            }
             onBlur={formik.handleBlur}
           />
-          {formik.touched.categoryIds && formik.errors.categoryIds ? (
+          {formik.touched.categoryId && formik.errors.categoryId ? (
             <p className="text-red-500 text-xs italic mt-1">
-              {formik.errors.categoryIds}
+              {formik.errors.categoryId}
             </p>
           ) : null}
         </div>
         <div className="w-full px-3 mb-8">
           <label
-            className="mx-auto cursor-pointer flex w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-black bg-white p-6 lg:py-36 text-center"
+            className="mx-auto cursor-pointer flex w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-black bg-white p-6 lg:py-28 text-center"
             htmlFor="brand-logo"
           >
             <LuUploadCloud size={50} color="#000" />
@@ -210,9 +240,9 @@ function BrandsForm({ getAllBrands, categories }) {
               className="hidden"
               name="logo"
               accept="image/png, image/jpeg, image/webp"
-              onChange={(event) => {
-                formik.setFieldValue("logo", event.currentTarget.files[0]);
-              }}
+              onChange={(event) =>
+                formik.setFieldValue("logo", event.currentTarget.files[0])
+              }
               onBlur={formik.handleBlur}
             />
             {formik.touched.logo && formik.errors.logo ? (
@@ -287,39 +317,6 @@ function DisktopTable({ showingFrom, showingTo, brands }) {
           )}
         </tbody>
       </table>
-    </div>
-  );
-}
-
-function BrandsTableHeader({
-  searchQuery,
-  setSearchQuery,
-  brands,
-  setBrands,
-  setCurrentPage,
-}) {
-  return (
-    <div>
-      <div className="w-full">
-        <input
-          type="search"
-          className="w-full px-4 py-2 rounded-lg mb-2 outline-none  md:py-3"
-          placeholder="Search category by Name..."
-          value={searchQuery}
-          onChange={(e) => {
-            const query = e.target.value;
-            setSearchQuery(query);
-
-            // Filter using allParentCategories (original data)
-            const filteredData = brands.filter((brand) => {
-              return brand.name.toLowerCase().includes(query.toLowerCase());
-            });
-
-            setBrands(filteredData); // Update the filtered categories
-            setCurrentPage(1); // Reset the pagination
-          }}
-        />
-      </div>
     </div>
   );
 }

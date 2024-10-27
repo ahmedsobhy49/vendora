@@ -27,9 +27,9 @@ export default function DeactiveSellers() {
     switch (state) {
       case "pending" && "Pending":
         return "bg-[#FEF2E5] text-[#CD6200]";
-      case "Canceled" && "canceled ":
+      case "deactive" && "Deactive ":
         return "bg-[#FBE7E8] text-[#A30D11]";
-      case "delivered" && "Delivered":
+      case "active" && "Active":
         return "bg-[#EBF9F1] text-[#1F9254]";
       default:
         return "";
@@ -57,7 +57,7 @@ export default function DeactiveSellers() {
           sellersDataState={sellersDataState}
           createStatusClasses={createStatusClasses}
         />
-        <DisktopTable
+        <DesktopTable
           showingFrom={showingFrom}
           showingTo={showingTo}
           createStatusClasses={createStatusClasses}
@@ -79,9 +79,10 @@ export default function DeactiveSellers() {
   );
 }
 
-function DisktopTable({
+function DesktopTable({
   showingFrom,
   showingTo,
+  searchQuery,
   createStatusClasses,
   sellersDataState,
 }) {
@@ -89,7 +90,7 @@ function DisktopTable({
     <div className="overflow-auto bg-white rounded-lg">
       <table className="hidden md:table min-w-full table-auto">
         <thead>
-          <tr>
+          <tr className="border-b-2">
             <th className="py-4 px-4">ID</th>
             <th className="py-4 px-4">Image</th>
             <th className="py-4 px-4">Name</th>
@@ -101,12 +102,12 @@ function DisktopTable({
             <th className="py-4 px-4">Action</th>
           </tr>
         </thead>
-        {sellersDataState.length ? (
-          <tbody>
-            {sellersDataState.slice(showingFrom, showingTo).map((seller) => (
+        <tbody>
+          {sellersDataState.length ? (
+            sellersDataState.slice(showingFrom, showingTo).map((seller) => (
               <tr
                 key={seller.id}
-                className="border-t hover:bg-gray-100 first:border-t-4"
+                className="dorrborder-t hover:bg-gray-100 first:border-t-4"
               >
                 <td className="text-center py-1 px-4">#{seller.id}</td>
                 <td className="text-center py-1 px-4">
@@ -125,7 +126,6 @@ function DisktopTable({
                 <td className="text-center py-1 px-4 capitalize">
                   {seller.shopName}
                 </td>
-
                 <td className="text-center py-1 px-4">
                   <span
                     className={`py-1 px-3 rounded-3xl capitalize ${createStatusClasses(
@@ -145,25 +145,27 @@ function DisktopTable({
                   <Link
                     to={`/admin/dashboard/sellers/${seller.id}`}
                     state={seller}
-                    className="text-green-500 text-center 0 py-7"
+                    className="text-green-500 text-center py-7"
                   >
                     <GrView size={25} />
                   </Link>
                 </td>
               </tr>
-            ))}
-          </tbody>
-        ) : (
-          <tr>
-            <td colSpan={9}>
-              <div className="flex justify-center">
-                <p className="text-center p-12 text-gray-500 text-lg">
-                  No Matched Data
-                </p>
-              </div>
-            </td>
-          </tr>
-        )}
+            ))
+          ) : (
+            <tr>
+              <td colSpan={9}>
+                <div className="flex justify-center">
+                  <p className="text-center p-12 text-gray-500 text-lg">
+                    {searchQuery
+                      ? "No matched data"
+                      : "There are no deactive sellers"}
+                  </p>
+                </div>
+              </td>
+            </tr>
+          )}
+        </tbody>
       </table>
     </div>
   );

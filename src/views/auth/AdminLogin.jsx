@@ -10,7 +10,6 @@ import adminLogin from "../../services/adminLogin";
 import Message from "../../common/Message";
 import Loading from "react-loading";
 import { useNavigate } from "react-router-dom";
-
 export default function AdminLogin() {
   const navigate = useNavigate();
   const [loginRequestMessage, setLoginRequestMessage] = useState({
@@ -31,7 +30,7 @@ export default function AdminLogin() {
     onSubmit: handleSubmit,
   });
 
-  const { mutate, isError, isLoading, isSuccess } = useMutation(adminLogin);
+  const { mutate, isError, isLoading, isSuccess, data ,error } = useMutation(adminLogin);
 
   function handleSubmit(values) {
     mutate(values, {
@@ -40,17 +39,18 @@ export default function AdminLogin() {
           type: "error",
           message: error.response.data.message,
         });
+        console.log(error)
       },
       onSuccess: (data) => {
         setLoginRequestMessage({ type: "success", message: "Login Success" });
-        navigate("/admin/dashboard");
         localStorage.setItem("accessToken", data.data.token);
+          navigate("/admin/dashboard", { replace: true });
       },
     });
   }
 
   return (
-    <div className="w-full">
+    <div className="w-10/12 sm:w-2/3 md:w-1/2 lg:w-1/3 xl:w-1/4 mx-auto bg-slate-50 shadow-lg p-10">
       <AppLogo
         width="30%"
         className="mx-auto mb-8 bg-slate-100 flex items-center justify-center rounded-full py-2 "

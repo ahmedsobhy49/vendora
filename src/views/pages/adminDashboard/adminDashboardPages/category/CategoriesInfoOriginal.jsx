@@ -14,7 +14,7 @@ export default function CategoriesInfo() {
 
   // Fetch categories by parent ID and populate the tree structure
   async function getCategoriesByParentId(parentId) {
-    const res = await api.get(`/category/get-by-parent/${parentId}`);
+    const res = await api.get(`/categories/parent/${parentId}`);
     const categories = res.data?.categories || [];
 
     const categoryPromises = categories.map(async (cat) => {
@@ -38,7 +38,7 @@ export default function CategoriesInfo() {
 
     try {
       // Create the parent category
-      const firstRes = await api.post("/category/add/category", {
+      const firstRes = await api.post("/category", {
         name: values.categoryName,
         parentCategoryId: category._id,
       });
@@ -49,7 +49,7 @@ export default function CategoriesInfo() {
       // Loop over subcategories and create each one
       for (let i = 0; i < values.subCategories.length; i++) {
         const subCategoryName = values.subCategories[i].name; // Extract the subcategory name
-        const secondRes = await api.post("/category/add/category", {
+        const secondRes = await api.post("/category", {
           name: subCategoryName,
           parentCategoryId: newID, // The newly created parent category ID
         });

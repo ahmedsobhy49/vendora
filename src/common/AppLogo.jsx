@@ -8,7 +8,7 @@ export default function AppLogo({ width = "15%", className = "" }) {
         width: width,
       }}
     >
-      <img src="http://localhost:5173/images/vendora.png" alt="vendora-logo" />
+      <img src="../../public/images/vendora.png" alt="vendora-logo" />
     </div>
   );
 }

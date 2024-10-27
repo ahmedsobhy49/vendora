@@ -7,13 +7,12 @@ import { AddSubcategoryModal } from "./AddSubcategoryModal";
 export default function CategoriesInfo() {
   const category = useLocation().state;
   const [parentCategory, setParentCategory] = useState(category);
-  console.log(parentCategory);
   const [categoryTree, setCategoryTree] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   async function getCategoriesByParentId(parentId) {
-    const res = await api.get(`/category/get-by-parent/${parentId}`);
+    const res = await api.get(`/categories/parent/${parentId}`);
     const categories = res.data?.categories || [];
 
     const categoryPromises = categories.map(async (cat) => {
@@ -26,13 +25,21 @@ export default function CategoriesInfo() {
 
   useEffect(() => {
     async function fetchCategories() {
-      const categories = await getCategoriesByParentId(category._id);
-      setCategoryTree(categories);
+      const categories = await getCategoriesByParentId(parentCategory._id);
+      setCategoryTree(categories)
     }
     fetchCategories();
-  }, [category]);
+  }, [parentCategory]);
 
-  // Function to handle category click
+
+
+
+useEffect(()=> {
+  setParentCategory(category)
+},[category])
+
+
+
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
     setIsModalOpen(true);
