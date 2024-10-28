@@ -50,7 +50,7 @@ export default function Summaries() {
         />
       </SummaryCard>
 
-      <SummaryCard title={"Sellers"} count={activeSellers.length}>
+      <SummaryCard title={"Sellers"} count={activeSellers?.length}>
         <FaUserTie
           color="#172554"
           className="text-[3rem] sm:text-[4rem] md:text-[6rem] xl:text-[4.5rem]"

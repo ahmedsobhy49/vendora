@@ -1,14 +1,15 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode"; // Corrected impo
+import { jwtDecode } from "jwt-decode"; // Make sure this is the correct import
 
 export function RedirectIfNotAuthenticated({ children }) {
-  const user = JSON.parse(localStorage.getItem("user")); // Get the token directly
-  const token = user.token;
+  const token = localStorage.getItem("token"); // Get the token directly
+
   // Check if the token exists
-  if (!user) {
-    return <Navigate to="/admin/login" />; // Redirect to login if no token
+  if (!token) {
+    return <Navigate to="/login" />; // Redirect to login if no token
   }
+
   try {
     const decodedToken = jwtDecode(token); // Decode the token
 
@@ -20,7 +21,7 @@ export function RedirectIfNotAuthenticated({ children }) {
     return children; // Render the children if admin
   } catch (error) {
     console.error("Invalid token", error);
-    return <Navigate to="/admin/login" />; // Redirect to login if token is invalid
+    return <Navigate to="/login" />; // Redirect to login if token is invalid
   }
 }
 

@@ -93,30 +93,32 @@ export default function SellerRegister() {
 
   return (
     <AppContainer>
-      <div className="flex flex-col justify-center items-center gap-4 mb-12">
-        <div>
-          <AppLogo width="100%" />
+      <div className="w-full">
+        <div className="flex flex-col justify-center items-center gap-4 mb-12">
+          <div>
+            <AppLogo width="100%" />
+          </div>
+          <h4 className="text-gray-800 font-semibold text-xl">
+            Start Your Selling Journey, Register Now!
+          </h4>
         </div>
-        <h4 className="text-gray-800 font-semibold text-xl">
-          Start Your Selling Journey, Register Now!
-        </h4>
+        <LoginStepper
+          registrationSuccess={registrationSuccess}
+          activeStep={activeStep}
+          onStepClick={(step, validateForm) =>
+            handleStepClick(step, validateForm)
+          }
+        />
+        <FormikStepper
+          activeStep={activeStep}
+          handleNext={handleNext}
+          handlePrev={handlePrev}
+          isLastStep={isLastStep}
+          validationSchema={formikSchemas[activeStep]}
+          setRegistrationSuccess={setRegistrationSuccess}
+          registrationSuccess={registrationSuccess}
+        />
       </div>
-      <LoginStepper
-        registrationSuccess={registrationSuccess}
-        activeStep={activeStep}
-        onStepClick={(step, validateForm) =>
-          handleStepClick(step, validateForm)
-        }
-      />
-      <FormikStepper
-        activeStep={activeStep}
-        handleNext={handleNext}
-        handlePrev={handlePrev}
-        isLastStep={isLastStep}
-        validationSchema={formikSchemas[activeStep]}
-        setRegistrationSuccess={setRegistrationSuccess}
-        registrationSuccess={registrationSuccess}
-      />
     </AppContainer>
   );
 }

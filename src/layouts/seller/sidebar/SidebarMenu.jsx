@@ -2,10 +2,11 @@ import React from "react";
 import { IoLogOut } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import SidebarLink from "../../admin/sidebar/SidebarLink";
-import { NavLink } from "react-router-dom";
 import sellerNavigation from "../../../navigation/seller";
-
+import logout from "../../../services/auth/logout";
+import { useNavigate } from "react-router-dom";
 export default function SidebarMenu({ setShowSideBar }) {
+  const navigate = useNavigate();
   return (
     <div className="h-full  flex flex-col">
       {/* Close Button */}
@@ -28,15 +29,18 @@ export default function SidebarMenu({ setShowSideBar }) {
       </ul>
 
       {/* Log Out Button */}
-      <NavLink
-        // to="/logout"
+      <button
+        onClick={async () => {
+          await logout(); // Wait for logout to complete
+          navigate("/login", { replace: true }); // Then navigate
+        }}
         className="flex font-bold items-center p-2 rounded-lg hover:bg-gray-100 text-gray-900 mt-auto"
       >
         <IoLogOut size={25} />
         <span className="ms-3 text-[0.85rem] sm:text-[1rem] 2xl:text-lg">
           Log Out
         </span>
-      </NavLink>
+      </button>
     </div>
   );
 }

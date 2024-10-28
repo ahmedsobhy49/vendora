@@ -1,11 +1,11 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode"; // Corrected import
+import { jwtDecode } from "jwt-decode"; // Make sure this is the correct import
 
 export default function RedirectIfAuthenticated({ children }) {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const token = user.token;
-  if (!user) {
+  const token = localStorage.getItem("token"); // Get the token directly
+
+  if (!token) {
     // If there's no token, allow access to the login page
     return children;
   }
