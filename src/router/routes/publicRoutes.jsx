@@ -8,6 +8,9 @@ const Home = lazy(() => import("../../pages/Home"));
 const SellerRegister = lazy(() =>
   import("../../views/auth/seller/SellerRegister")
 );
+const SellerLogin = lazy(() => import("../../views/auth/seller/SellerLogin"));
+
+import RedirectIfAuthenticated from "./RedirectIfAuthenticated";
 
 const publicRoutes = [
   {
@@ -19,7 +22,7 @@ const publicRoutes = [
       },
       {
         path: "/login",
-        element: <Login />,
+        element: <AdminLogin />,
       },
       {
         path: "/register",
@@ -27,11 +30,19 @@ const publicRoutes = [
       },
       {
         path: "/admin/login",
-        element: <AdminLogin />,
+        element: (
+          <RedirectIfAuthenticated>
+            <AdminLogin />
+          </RedirectIfAuthenticated>
+        ),
       },
       {
         path: "/seller/register",
         element: <SellerRegister />,
+      },
+      {
+        path: "/seller/login",
+        element: <SellerLogin />,
       },
     ],
   },

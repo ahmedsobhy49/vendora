@@ -3,14 +3,20 @@ import { MdProductionQuantityLimits } from "react-icons/md";
 import { FaUserTie } from "react-icons/fa";
 import { FaFileInvoiceDollar } from "react-icons/fa";
 import { IoCall } from "react-icons/io5";
-import { sellers } from "../../../../../../data/sellers.json";
-import { orders } from "../../../../../../data/orders.json";
-import { products } from "../../../../../../data/products.json";
-const activeSellers = sellers.filter((seller) => seller.status == "active");
+import getActiveSellers from "../../../../../../services/seller/getActiveSellers";
+
+const orders = [];
+const products = [
+  { id: 1, name: "Product 1", price: 100 },
+  { id: 2, name: "Product 2", price: 200 },
+  { id: 3, name: "Product 3", price: 300 },
+];
 const totalSales = orders.reduce((acc, order) => {
   acc += order.totalPrice;
   return acc;
 }, 0);
+
+const activeSellers = await getActiveSellers();
 function SummaryCard({ children, count, title }) {
   return (
     <div className="h-36 md:h-44 lg:h-52 bg-white shadow-md flex justify-between items-center px-5 ">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DashboardContainer from "../../../../../common/DashboardContainer";
 import { sellers as originalSellersData } from "../../../../../data/sellers.json";
 import ScrollToTopOnPaginate from "../../../../../common/ScrollToTopOnPaginate";
@@ -6,6 +6,9 @@ import { GrView } from "react-icons/gr";
 import Pagination from "../../../../../common/Pagination";
 import TablesSelectDropdown from "../../../../../common/TablesSelectDropdown";
 import { Link } from "react-router-dom";
+import api from "../../../../../api/api";
+import createStatusClasses from "../../../../../utils/createStatusClasses";
+import getInactiveSellers from "../../../../../services/seller/getInactiveSellers";
 
 const deactiveSeller = originalSellersData.filter(
   (seller) => seller.status === "deactive"
@@ -23,18 +26,13 @@ export default function DeactiveSellers() {
       ? entriesNum * (currentPage - 1) + entriesNum
       : allEntriesNum;
 
-  function createStatusClasses(state) {
-    switch (state) {
-      case "pending" && "Pending":
-        return "bg-[#FEF2E5] text-[#CD6200]";
-      case "deactive" && "Deactive ":
-        return "bg-[#FBE7E8] text-[#A30D11]";
-      case "active" && "Active":
-        return "bg-[#EBF9F1] text-[#1F9254]";
-      default:
-        return "";
-    }
-  }
+  useEffect(() => {
+    const fetchInactiveSellers = async () => {
+      const sellers = await getInactiveSellers();
+      setSellersDataState(sellers);
+    };
+    fetchInactiveSellers();
+  }, []);
 
   return (
     <DashboardContainer>
@@ -91,59 +89,77 @@ function DesktopTable({
       <table className="hidden md:table min-w-full table-auto">
         <thead>
           <tr className="border-b-2">
-            <th className="py-4 px-4">ID</th>
-            <th className="py-4 px-4">Image</th>
-            <th className="py-4 px-4">Name</th>
-            <th className="py-4 px-4">Email</th>
-            <th className="py-4 px-4">Shop Name</th>
-            <th className="py-4 px-4">Payment Status</th>
-            <th className="py-4 px-4">Division</th>
-            <th className="py-4 px-4">Districts</th>
-            <th className="py-4 px-4">Action</th>
+            {/* <th className="py-4 px-4" scope="col">
+              ID
+            </th> */}
+            <th className="py-4 px-4" scope="col">
+              Image
+            </th>
+            <th className="py-4 px-4" scope="col">
+              Name
+            </th>
+            <th className="py-4 px-4" scope="col">
+              Email
+            </th>
+            <th className="py-4 px-4" scope="col">
+              Shop Name
+            </th>
+            <th className="py-4 px-4" scope="col">
+              Status
+            </th>
+            <th className="py-4 px-4" scope="col">
+              State
+            </th>
+            <th className="py-4 px-4" scope="col">
+              Country
+            </th>
+            <th className="py-4 px-4" scope="col">
+              Action
+            </th>
           </tr>
         </thead>
         <tbody>
           {sellersDataState.length ? (
             sellersDataState.slice(showingFrom, showingTo).map((seller) => (
               <tr
-                key={seller.id}
-                className="dorrborder-t hover:bg-gray-100 first:border-t-4"
+                key={seller._id}
+                className="border-t hover:bg-gray-100 first:border-t-4"
               >
-                <td className="text-center py-1 px-4">#{seller.id}</td>
+                {/* <td className="text-center py-1 px-4">#{seller.id}</td> */}
                 <td className="text-center py-1 px-4">
                   <div className="w-12 mx-auto md:w-16 xl:w-20 rounded-full">
                     <img
-                      src={seller.image}
-                      alt="category"
+                      src={`http://localhost:8000${seller.image}`}
+                      alt={seller.businessInfo.companyName}
                       className="w-full aspect-square rounded-full border-4 shadow-2xl"
                     />
                   </div>
                 </td>
                 <td className="text-center py-1 px-4 capitalize">
-                  {seller.name}
+                  {seller.firstName} {seller.lastName}
                 </td>
                 <td className="text-center py-1 px-4">{seller.email}</td>
                 <td className="text-center py-1 px-4 capitalize">
-                  {seller.shopName}
+                  {seller.businessInfo.companyName}
                 </td>
                 <td className="text-center py-1 px-4">
                   <span
                     className={`py-1 px-3 rounded-3xl capitalize ${createStatusClasses(
-                      seller.paymentStatus
+                      seller.status
                     )}`}
                   >
-                    {seller.paymentStatus}
+                    {seller.status}
                   </span>
                 </td>
                 <td className="text-center py-1 px-4 capitalize">
-                  {seller.division}
+                  {seller.address.state}
                 </td>
                 <td className="text-center py-1 px-4 capitalize">
-                  {seller.district}
+                  {seller.address.country}
                 </td>
                 <td className="text-center px-4 py-1 flex justify-center space-x-2">
                   <Link
-                    to={`/admin/dashboard/sellers/${seller.id}`}
+                    to={`/admin/dashboard/sellers/${seller._id}`}
                     state={seller}
                     className="text-green-500 text-center py-7"
                   >
@@ -158,8 +174,8 @@ function DesktopTable({
                 <div className="flex justify-center">
                   <p className="text-center p-12 text-gray-500 text-lg">
                     {searchQuery
-                      ? "No matched data"
-                      : "There are no deactive sellers"}
+                      ? "No results found"
+                      : "No Inactive sellers found"}
                   </p>
                 </div>
               </td>
@@ -239,7 +255,7 @@ function MobileTable({
             <dl>
               <div className="w-1/3 mx-auto mb-4">
                 <img
-                  src={seller.image}
+                  src={`http://localhost:8000${seller.image}`}
                   alt="category"
                   className="w-full aspect-square rounded-full border-4 shadow-xl"
                 />

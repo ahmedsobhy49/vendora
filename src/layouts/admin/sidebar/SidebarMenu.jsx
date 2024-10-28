@@ -6,7 +6,7 @@ import adminNavigation from "../../../navigation/admin";
 import api from "../../../api/api";
 import { useNavigate } from "react-router-dom";
 export default function SidebarMenu({ setShowSideBar }) {
-const navigate = useNavigate();
+  const navigate = useNavigate();
   async function logOut() {
     await api.post("/auth/logout");
     localStorage.removeItem("accessToken");
@@ -35,8 +35,7 @@ const navigate = useNavigate();
 
       {/* Log Out Button */}
       <button
-      onClick={logOut}
-
+        onClick={logOut}
         className="flex font-bold items-center p-2 rounded-lg hover:bg-gray-100 text-gray-900 mt-auto"
       >
         <IoLogOut size={25} />

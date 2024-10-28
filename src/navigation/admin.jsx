@@ -55,7 +55,7 @@ const adminNavigation = [
     id: 6,
     icon: <FaUserXmark />,
     path: "/admin/dashboard/deactive-seller",
-    label: "Deactive Sellers",
+    label: "Inactive Sellers",
     role: "admin",
   },
   {

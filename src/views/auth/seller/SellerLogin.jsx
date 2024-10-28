@@ -1,16 +1,16 @@
 import { useFormik } from "formik";
 import React, { useState } from "react";
 import * as Yup from "yup";
-import FieldError from "../../common/FieldError";
-import Input from "../../common/Input";
-import Button from "../../common/Button";
-import AppLogo from "../../common/AppLogo";
+import FieldError from "../../../common/FieldError";
+import Input from "../../../common/Input";
+import Button from "../../../common/Button";
+import AppLogo from "../../../common/AppLogo";
 import { useMutation } from "react-query";
-import adminLogin from "../../services/adminLogin";
-import Message from "../../common/Message";
+import Message from "../../../common/Message";
 import Loading from "react-loading";
 import { useNavigate } from "react-router-dom";
-export default function AdminLogin() {
+import sellerLogin from "../../../services/seller/sellerLogin";
+export default function SellerLogin() {
   const navigate = useNavigate();
   const [loginRequestMessage, setLoginRequestMessage] = useState({
     type: "",
@@ -31,7 +31,7 @@ export default function AdminLogin() {
   });
 
   const { mutate, isError, isLoading, isSuccess, data, error } =
-    useMutation(adminLogin);
+    useMutation(sellerLogin);
 
   function handleSubmit(values) {
     mutate(values, {
@@ -44,14 +44,12 @@ export default function AdminLogin() {
       },
       onSuccess: (data) => {
         setLoginRequestMessage({ type: "success", message: "Login Success" });
+        console.log(data.data);
         localStorage.setItem(
           "user",
-          JSON.stringify({
-            token: data.data.token,
-            role: data.data.user.role,
-          })
+          JSON.stringify({ token: data.data.token, role: data.data.user.role })
         );
-        navigate("/admin/dashboard", { replace: true });
+        navigate("/seller/dashboard", { replace: true });
       },
     });
   }
@@ -69,7 +67,7 @@ export default function AdminLogin() {
             <Input
               name={"email"}
               type={"email"}
-              id={"a-l-email"}
+              id={"s-l-email"}
               label={"Email"}
               value={formik.values.email}
               onBlur={formik.handleBlur}
@@ -84,7 +82,7 @@ export default function AdminLogin() {
             <Input
               name={"password"}
               type={"password"}
-              id={"a-l-password"}
+              id={"s-l-password"}
               label={"Password"}
               value={formik.values.password}
               onBlur={formik.handleBlur}

@@ -5,15 +5,17 @@ import { GrView } from "react-icons/gr";
 import Pagination from "../../../../../common/Pagination";
 import TablesSelectDropdown from "../../../../../common/TablesSelectDropdown";
 import { Link } from "react-router-dom";
-import api from "../../../../../api/api";
 import { useEffect } from "react";
+import createStatusClasses from "../../../../../utils/createStatusClasses";
+import getSellersRequest from "../../../../../services/seller/getSellersRequest";
 
 export default function SellersRequest() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [sellersRquestDataState, setSellersRequestDataState] = useState([]);
+  const [sellersRequestDataState, setSellersRequestDataState] = useState([]);
   const [entriesNum, setEntriesNum] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const allEntriesNum = sellersRquestDataState.length;
+
+  const allEntriesNum = sellersRequestDataState.length;
   const numberOfPages = Math.ceil(allEntriesNum / entriesNum);
   const showingFrom = entriesNum * (currentPage - 1);
   const showingTo =
@@ -21,32 +23,13 @@ export default function SellersRequest() {
       ? entriesNum * (currentPage - 1) + entriesNum
       : allEntriesNum;
 
-  async function getSellersRequest() {
-    try {
-      const res = await api.get("sellers/requests");
-      setSellersRequestDataState(res.data.sellers);
-      console.log(res);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   useEffect(() => {
-    getSellersRequest();
+    const fetchSellersRequest = async () => {
+      const sellers = await getSellersRequest();
+      setSellersRequestDataState(sellers);
+    };
+    fetchSellersRequest();
   }, []);
-
-  function createStatusClasses(state) {
-    switch (state) {
-      case "pending" && "Pending":
-        return "bg-[#FEF2E5] text-[#CD6200]";
-      case "Canceled" && "canceled ":
-        return "bg-[#FBE7E8] text-[#A30D11]";
-      case "delivered" && "Delivered":
-        return "bg-[#EBF9F1] text-[#1F9254]";
-      default:
-        return "";
-    }
-  }
 
   return (
     <DashboardContainer>
@@ -58,7 +41,7 @@ export default function SellersRequest() {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           setSellersRequestDataState={setSellersRequestDataState}
-          sellersRquestDataState={sellersRquestDataState}
+          sellersRequestDataState={sellersRequestDataState}
           setCurrentPage={setCurrentPage}
           numberOfPages={numberOfPages}
           currentPage={currentPage}
@@ -66,18 +49,17 @@ export default function SellersRequest() {
         <MobileTable
           showingFrom={showingFrom}
           showingTo={showingTo}
-          sellersRquestDataState={sellersRquestDataState}
+          sellersRequestDataState={sellersRequestDataState}
           createStatusClasses={createStatusClasses}
           searchQuery={searchQuery}
         />
         <DesktopTable
           showingFrom={showingFrom}
           showingTo={showingTo}
-          createStatusClasses={createStatusClasses}
           searchQuery={searchQuery}
-          sellersRquestDataState={sellersRquestDataState}
+          sellersRequestDataState={sellersRequestDataState}
         />
-        {sellersRquestDataState.length ? (
+        {sellersRequestDataState.length ? (
           <Pagination
             numberOfPages={numberOfPages} // total number of pages that should be composed based on total number of entries (data length)
             currentPage={currentPage} // the current page are user in while pagination
@@ -95,8 +77,7 @@ export default function SellersRequest() {
 function DesktopTable({
   showingFrom,
   showingTo,
-  createStatusClasses,
-  sellersRquestDataState,
+  sellersRequestDataState,
   searchQuery,
 }) {
   return (
@@ -120,13 +101,13 @@ function DesktopTable({
               Shop Name
             </th>
             <th className="py-4 px-4" scope="col">
-              Payment Status
+              Status
             </th>
             <th className="py-4 px-4" scope="col">
-              Division
+              State
             </th>
             <th className="py-4 px-4" scope="col">
-              Districts
+              Country
             </th>
             <th className="py-4 px-4" scope="col">
               Action
@@ -134,20 +115,20 @@ function DesktopTable({
           </tr>
         </thead>
         <tbody>
-          {sellersRquestDataState.length ? (
-            sellersRquestDataState
+          {sellersRequestDataState.length ? (
+            sellersRequestDataState
               .slice(showingFrom, showingTo)
               .map((seller) => (
                 <tr
-                  key={seller.id}
+                  key={seller._id}
                   className="border-t hover:bg-gray-100 first:border-t-4"
                 >
                   {/* <td className="text-center py-1 px-4">#{seller.id}</td> */}
                   <td className="text-center py-1 px-4">
                     <div className="w-12 mx-auto md:w-16 xl:w-20 rounded-full">
                       <img
-                        src={seller.image}
-                        alt={seller.shopName}
+                        src={`http://localhost:8000${seller.image}`}
+                        alt={seller.businessInfo.companyName}
                         className="w-full aspect-square rounded-full border-4 shadow-2xl"
                       />
                     </div>
@@ -162,21 +143,21 @@ function DesktopTable({
                   <td className="text-center py-1 px-4">
                     <span
                       className={`py-1 px-3 rounded-3xl capitalize ${createStatusClasses(
-                        seller.paymentStatus
+                        seller.status
                       )}`}
                     >
-                      {seller.paymentStatus}
+                      {seller.status}
                     </span>
                   </td>
                   <td className="text-center py-1 px-4 capitalize">
-                    {seller.division}
+                    {seller.address.state}
                   </td>
                   <td className="text-center py-1 px-4 capitalize">
-                    {seller.address.city}
+                    {seller.address.country}
                   </td>
                   <td className="text-center px-4 py-1 flex justify-center space-x-2">
                     <Link
-                      to={`/admin/dashboard/sellers/${seller.id}`}
+                      to={`/admin/dashboard/sellers/${seller._id}`}
                       state={seller}
                       className="text-green-500 text-center py-7"
                     >
@@ -192,7 +173,7 @@ function DesktopTable({
                   <p className="text-center p-12 text-gray-500 text-lg">
                     {searchQuery
                       ? "No matched data"
-                      : "There are no seller requests"}
+                      : "No seller Requests found"}
                   </p>
                 </div>
               </td>
@@ -210,7 +191,7 @@ function SellerRequestTableHeader({
   searchQuery,
   setSearchQuery,
   setSellersRequestDataState,
-  sellersRquestDataState,
+  sellersRequestDataState,
   setCurrentPage,
   currentPage,
   numberOfPages,
@@ -242,7 +223,7 @@ function SellerRequestTableHeader({
             const query = e.target.value;
             setSearchQuery(query);
 
-            const filteredData = sellersRquestDataState.filter((seller) => {
+            const filteredData = sellersRequestDataState.filter((seller) => {
               return seller.name.includes(query);
             });
 
@@ -258,22 +239,22 @@ function SellerRequestTableHeader({
 function MobileTable({
   showingFrom,
   showingTo,
-  sellersRquestDataState,
+  sellersRequestDataState,
   createStatusClasses,
 }) {
   return (
     <div className="block sm:hidden">
       {/* Mobile Table: Display as list on mobile */}
-      {sellersRquestDataState.length ? (
-        sellersRquestDataState.slice(showingFrom, showingTo).map((seller) => (
+      {sellersRequestDataState.length ? (
+        sellersRequestDataState.slice(showingFrom, showingTo).map((seller) => (
           <div
-            key={seller.id}
+            key={seller._id}
             className="mb-2 p-4 border rounded-lg bg-white flex flex-col gap-2"
           >
             <dl>
               <div className="w-1/3 mx-auto mb-4">
                 <img
-                  src={seller.image}
+                  src={`http://localhost:8000${seller.image}`}
                   alt="category"
                   className="w-full aspect-square rounded-full border-4 shadow-xl"
                 />
@@ -312,14 +293,14 @@ function MobileTable({
               </div>
               <div className="bg-gray-50 flex items-center justify-between px-4 py-4 lg:py-5 lg:grid lg:grid-cols-3 lg:gap-4 lg:px-6">
                 <dt className="text-sm sm:text-[1rem] font-medium text-gray-500">
-                  Payment Status
+                  Status
                 </dt>
                 <dd
                   className={`capitalize text-sm sm:text-[1rem] text-gray-900 sm:col-span-2 ${createStatusClasses(
-                    seller.paymentStatus
+                    seller.status
                   )}`}
                 >
-                  {seller.paymentStatus}
+                  {seller.status}
                 </dd>
               </div>
               <div className="flex items-center justify-between px-4 py-4 lg:py-5 lg:grid lg:grid-cols-3 lg:gap-4 lg:px-6">

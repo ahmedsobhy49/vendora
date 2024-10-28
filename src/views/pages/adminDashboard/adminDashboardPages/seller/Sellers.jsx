@@ -1,21 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DashboardContainer from "../../../../../common/DashboardContainer";
-import { sellers as originalSellersData } from "../../../../../data/sellers.json";
 import ScrollToTopOnPaginate from "../../../../../common/ScrollToTopOnPaginate";
 import { GrView } from "react-icons/gr";
 import Pagination from "../../../../../common/Pagination";
 import TablesSelectDropdown from "../../../../../common/TablesSelectDropdown";
 import { Link } from "react-router-dom";
-import { addresses } from "../../../../../data/adresses.json";
-const activeSellers = originalSellersData.filter(
-  (seller) => seller.status === "active"
-);
-console.log(addresses);
-console.log(activeSellers);
-
+import createStatusClasses from "../../../../../utils/createStatusClasses";
+import getActiveSeller from "../../../../../services/seller/getActiveSellers";
+import formatName from "../../../../../utils/formatName";
 export default function Sellers() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [sellersDataState, setSellersDataState] = useState(activeSellers);
+  const [sellersDataState, setSellersDataState] = useState([]);
   const [entriesNum, setEntriesNum] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const allEntriesNum = sellersDataState.length;
@@ -26,18 +21,14 @@ export default function Sellers() {
       ? entriesNum * (currentPage - 1) + entriesNum
       : allEntriesNum;
 
-  function createStatusClasses(state) {
-    switch (state) {
-      case "pending" && "Pending":
-        return "bg-[#FEF2E5] text-[#CD6200]";
-      case "Canceled" && "canceled ":
-        return "bg-[#FBE7E8] text-[#A30D11]";
-      case "delivered" && "Delivered":
-        return "bg-[#EBF9F1] text-[#1F9254]";
-      default:
-        return "";
-    }
-  }
+  useEffect(() => {
+    const fetchActiveSellers = async () => {
+      const sellers = await getActiveSeller();
+      setSellersDataState(sellers);
+    };
+
+    fetchActiveSellers();
+  }, []);
 
   return (
     <DashboardContainer>
@@ -58,12 +49,10 @@ export default function Sellers() {
           showingFrom={showingFrom}
           showingTo={showingTo}
           sellersDataState={sellersDataState}
-          createStatusClasses={createStatusClasses}
         />
         <DisktopTable
           showingFrom={showingFrom}
           showingTo={showingTo}
-          createStatusClasses={createStatusClasses}
           searchQuery={searchQuery}
           sellersDataState={sellersDataState}
         />
@@ -83,77 +72,90 @@ export default function Sellers() {
 }
 
 function DisktopTable({
+  searchQuery,
   showingFrom,
   showingTo,
-  createStatusClasses,
   sellersDataState,
 }) {
   return (
     <div className="overflow-auto bg-white rounded-lg">
       <table className="hidden md:table min-w-full table-auto">
         <thead>
-          <tr>
-            <th className="py-4 px-4">ID</th>
-            <th className="py-4 px-4">Image</th>
-            <th className="py-4 px-4">Name</th>
-            <th className="py-4 px-4">Email</th>
-            <th className="py-4 px-4">Shop Name</th>
-            <th className="py-4 px-4">Payment Status</th>
-            <th className="py-4 px-4">City</th>
-            <th className="py-4 px-4">State</th>
-            <th className="py-4 px-4">Action</th>
+          <tr className="border-b-2">
+            {/* <th className="py-4 px-4" scope="col">
+              ID
+            </th> */}
+            <th className="py-4 px-4" scope="col">
+              Image
+            </th>
+            <th className="py-4 px-4" scope="col">
+              Name
+            </th>
+            <th className="py-4 px-4" scope="col">
+              Email
+            </th>
+            <th className="py-4 px-4" scope="col">
+              Shop Name
+            </th>
+            <th className="py-4 px-4" scope="col">
+              Status
+            </th>
+            <th className="py-4 px-4" scope="col">
+              State
+            </th>
+            <th className="py-4 px-4" scope="col">
+              Country
+            </th>
+            <th className="py-4 px-4" scope="col">
+              Action
+            </th>
           </tr>
         </thead>
         {sellersDataState.length ? (
           <tbody>
             {sellersDataState.slice(showingFrom, showingTo).map((seller) => {
-              const sellerAddress = addresses.find(
-                (address) => address.userId === seller._id
-              );
-              console.log(sellerAddress);
               return (
                 <tr
                   key={seller._id}
                   className="border-t hover:bg-gray-100 first:border-t-4"
                 >
-                  <td className="text-center py-1 px-4">#{seller._id}</td>
+                  {/* <td className="text-center py-1 px-4">#{seller.id}</td> */}
                   <td className="text-center py-1 px-4">
                     <div className="w-12 mx-auto md:w-16 xl:w-20 rounded-full">
                       <img
-                        src={seller.image}
-                        alt="category"
+                        src={`http://localhost:8000${seller.image}`}
+                        alt={seller.businessInfo.companyName}
                         className="w-full aspect-square rounded-full border-4 shadow-2xl"
                       />
                     </div>
                   </td>
                   <td className="text-center py-1 px-4 capitalize">
-                    {seller.name}
+                    {seller.firstName} {seller.lastName}
                   </td>
                   <td className="text-center py-1 px-4">{seller.email}</td>
                   <td className="text-center py-1 px-4 capitalize">
                     {seller.businessInfo.companyName}
                   </td>
-
                   <td className="text-center py-1 px-4">
                     <span
                       className={`py-1 px-3 rounded-3xl capitalize ${createStatusClasses(
-                        seller.paymentStatus
+                        seller.status
                       )}`}
                     >
-                      {seller.paymentStatus}
+                      {seller.status}
                     </span>
                   </td>
                   <td className="text-center py-1 px-4 capitalize">
-                    {sellerAddress.city}
+                    {seller.address.state}
                   </td>
                   <td className="text-center py-1 px-4 capitalize">
-                    {sellerAddress.state}
+                    {seller.address.country}
                   </td>
                   <td className="text-center px-4 py-1 flex justify-center space-x-2">
                     <Link
-                      to={`/admin/dashboard/sellers/${seller.id}`}
-                      state={{ seller }}
-                      className="text-green-500 text-center 0 py-7"
+                      to={`/admin/dashboard/sellers/${seller._id}`}
+                      state={seller}
+                      className="text-green-500 text-center py-7"
                     >
                       <GrView size={25} />
                     </Link>
@@ -167,7 +169,7 @@ function DisktopTable({
             <td colSpan={9}>
               <div className="flex justify-center">
                 <p className="text-center p-12 text-gray-500 text-lg">
-                  No Matched Data
+                  {searchQuery ? "No results found" : "No Active sellers found"}
                 </p>
               </div>
             </td>
@@ -184,6 +186,7 @@ function SellerTableHeader({
   searchQuery,
   setSearchQuery,
   setSellersDataState,
+  sellersDataState,
   setCurrentPage,
   currentPage,
   numberOfPages,
@@ -214,9 +217,11 @@ function SellerTableHeader({
           onChange={(e) => {
             const query = e.target.value;
             setSearchQuery(query);
-
-            const filteredData = activeSeller.filter((seller) => {
-              return seller.name.includes(query);
+            console.log(sellersDataState);
+            const filteredData = sellersDataState.filter((seller) => {
+              return formatName(seller.firstName, seller.lastName).includes(
+                query
+              );
             });
 
             setSellersDataState(filteredData);
@@ -228,12 +233,7 @@ function SellerTableHeader({
   );
 }
 
-function MobileTable({
-  showingFrom,
-  showingTo,
-  sellersDataState,
-  createStatusClasses,
-}) {
+function MobileTable({ showingFrom, showingTo, sellersDataState }) {
   return (
     <div className="block sm:hidden">
       {/* Mobile Table: Display as list on mobile */}
