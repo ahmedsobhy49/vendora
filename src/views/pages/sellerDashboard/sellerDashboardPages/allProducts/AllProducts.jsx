@@ -6,10 +6,41 @@ import { GrView } from "react-icons/gr";
 import Pagination from "../../../../../common/Pagination";
 import TablesSelectDropdown from "../../../../../common/TablesSelectDropdown";
 import { parentCategories } from "../../../../../data/parentCategories.json";
-console.log(parentCategories);
+import getRelatedSellerProducts from "../../../../../services/products/getRelatedSellerProducts";
+import { useQuery } from "react-query";
+import { authService } from "../../../../../services/auth/auth";
 export default function AllProducts() {
   const [productsDataState, setProductsDataState] =
     useState(originaProductsData);
+  const token = localStorage.getItem("token");
+
+  // Using useQuery to fetch user info
+  const { data: seller } = useQuery(
+    ["user", token],
+    authService.fetchUserInfo,
+    {
+      enabled: !!token, // Only run the query if the token exists
+    }
+  );
+  const {
+    data: products,
+    isLoading: loadingProducts,
+    isError: errorProducts,
+  } = useQuery(
+    ["products", seller?.user?._id],
+    () => getRelatedSellerProducts(seller?.user?._id),
+    {
+      enabled: !!seller?.user?._id,
+      onSuccess: (fetchedProducts) => {
+        console.log(fetchedProducts.data);
+        setProductsDataState(fetchedProducts?.data); // Set state with fetched products
+      },
+    }
+  );
+  // console.log(seller.user._id);
+
+  console.log(products?.data);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [entriesNum, setEntriesNum] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
@@ -79,9 +110,9 @@ function DisktopTable({ showingFrom, showingTo, productsDataState }) {
             <th className="py-4 px-4">Action</th>
           </tr>
         </thead>
-        {productsDataState.length ? (
+        {productsDataState?.length ? (
           <tbody>
-            {productsDataState.slice(showingFrom, showingTo).map((product) => {
+            {productsDataState?.slice(showingFrom, showingTo).map((product) => {
               // Find the parent category name
               const parentCategory = parentCategories.find(
                 (parentCategory) =>
@@ -94,8 +125,8 @@ function DisktopTable({ showingFrom, showingTo, productsDataState }) {
                   <td className="text-center py-0 px-4">
                     <div className="w-12 mx-auto md:w-16 xl:w-20 rounded-full">
                       <img
-                        src={product.images[0].url}
-                        alt={product.images[0].altText}
+                        // src={product.images[0].url}
+                        // alt={product.images[0].altText}
                         className="w-full aspect-square rounded-full border-4 shadow-2xl"
                       />
                     </div>
@@ -114,7 +145,7 @@ function DisktopTable({ showingFrom, showingTo, productsDataState }) {
                   </td>
                   <td className={`text-center py-0 px-4`}>
                     <span className={`py-2 px-3 rounded-3xl `}>
-                      {product.brand}
+                      {product.brandId}
                     </span>
                   </td>
                   <td className={`text-center py-0 px-4`}>
@@ -215,16 +246,16 @@ function MobileTable({ showingFrom, showingTo, productsDataState }) {
   return (
     <div className="block sm:hidden">
       {/* Mobile Table: Display as a list on mobile */}
-      {productsDataState.length ? (
-        productsDataState.slice(showingFrom, showingTo).map((product) => (
+      {productsDataState?.length ? (
+        productsDataState?.slice(showingFrom, showingTo).map((product) => (
           <div
             key={product._id}
             className="mb-2 p-4 border rounded-lg bg-gray-50 flex flex-col gap-2"
           >
             <div className="flex justify-center items-center">
               <img
-                src={product.images[0].url}
-                alt={product.images[0].altText}
+                // src={product.images[0].url}
+                // alt={product.images[0].altText}
                 className="w-20 h-20 object-cover rounded-full"
               />
             </div>

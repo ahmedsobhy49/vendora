@@ -218,55 +218,6 @@ function FormikStepper({
           }
         }
       }}
-      // onSubmit={async (values, { resetForm }) => {
-      //   if (isLastStep) {
-      //     const formattedValues = {
-      //       firstName: values.first_name,
-      //       lastName: values.last_name,
-      //       image: values.image,
-      //       email: values.email,
-      //       phone: values.phone_number,
-      //       password: values.password,
-      //       address: {
-      //         buildingNumber: values.building,
-      //         street: values.street,
-      //         city: values.city,
-      //         state: values.state,
-      //         zip: values.zip,
-      //         country: values.country,
-      //       },
-      //       businessInfo: {
-      //         companyName: values.company_name,
-      //         registrationNumber: values.registration_number,
-      //         taxId: values.tax_id,
-      //       },
-      //       bankDetails: {
-      //         accountNumber: "",
-      //         bankName: "",
-      //         routingNumber: "",
-      //         accountHolderName: "",
-      //         swiftCode: "",
-      //       },
-      //     };
-      //     setLoading(true); // Set loading to true before the API call
-      //     try {
-      //       const res = await api.post("sellers/register", formattedValues);
-      //       console.log(res);
-      //       setRegistrationSuccess(true); // Set success state
-      //       resetForm();
-      //     } catch (error) {
-      //       console.error("Error during registration:", error);
-      //       if (error.response && error.response.data) {
-      //         const errorMessage =
-      //           error.response.data.message ||
-      //           "Registration failed. Please try again.";
-      //         alert(errorMessage);
-      //       }
-      //     } finally {
-      //       setLoading(false); // Reset loading to false after the API call
-      //     }
-      //   }
-      // }}
     >
       {({ validateForm, setFieldValue }) => (
         <Form>

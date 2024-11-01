@@ -1,17 +1,15 @@
 import React from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useQuery } from "react-query";
-import fetchUserInfo from "../../../services/getLoggedUserInfo";
+import { authService } from "../../../services/auth/auth";
 
 export default function Header({ setShowSideBar }) {
   const token = localStorage.getItem("token");
 
   // Using useQuery to fetch user info
-  const { data } = useQuery(["user", token], fetchUserInfo, {
+  const { data } = useQuery(["user", token], authService.fetchUserInfo, {
     enabled: !!token, // Only run the query if the token exists
   });
-
-  console.log(data);
 
   return (
     <div className="fixed  z-20 w-full h-20 bg-white shadow-2xl px-4 md:px-6 lg:px-10 md:w-[70%] lg:w-3/4 xl:w-4/5 lg:h-24">

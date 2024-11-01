@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  font-size: 0.9em;
+  font-size: 0.8em;
 }
 
 .custom-hight {
@@ -62,4 +62,28 @@ td:not(:last-child) {
 
 th:not(:last-child) {
   border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+/* for tag element container  */
+.rti--container {
+  --rti-border: #eee !important;
+  --rti-main: #2196f3 !important;
+  border: 1px solid var(--rti-border) !important;
+  padding: 0.5rem 0.75rem !important;
+  outline: none !important;
+}
+
+/* Hover state - apply border color only */
+.rti--container:hover {
+  border: 1px solid black !important;
+}
+
+.rti--container:focus-within {
+  border: 1px solid var(--rti-main) !important;
+}
+
+/*for tag input element  */
+.rti--input {
+  width: 100% !important;
+  padding: 0 !important;
 }

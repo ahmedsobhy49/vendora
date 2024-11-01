@@ -9,7 +9,7 @@ export const AddSubcategoryModal = ({ isOpen, onClose, category }) => {
     console.log("Adding subcategory to:", category);
     try {
       // Make API call to add the subcategory
-      const res = await api.post("/category/add/category", {
+      const res = await api.post("/category/", {
         name: values.subcategoryName, // Use the single subcategory name
         parentCategoryId: category._id, // Add under the clicked category
       });

@@ -1,10 +1,11 @@
 import { lazy } from "react";
 import SellerLayout from "../../layouts/seller/SellerLayout";
 import CustomSuspense from "../../common/CustomSuspense";
+import RedirectIfNotAuthenticated from "./RedirectIfNotAuthenticated";
 
-const AddProducts = lazy(() =>
+const AddProductMainForm = lazy(() =>
   import(
-    "../../views/pages/sellerDashboard/sellerDashboardPages/addProduct/AddProducts"
+    "../../views/pages/sellerDashboard/sellerDashboardPages/addProduct/AddProductMainForm"
   )
 );
 const AllProducts = lazy(() =>
@@ -44,7 +45,11 @@ const Dashboard = lazy(() =>
 
 const sellerRoutes = [
   {
-    element: <SellerLayout />,
+    element: (
+      <RedirectIfNotAuthenticated allowedRoles={["seller"]}>
+        <SellerLayout />
+      </RedirectIfNotAuthenticated>
+    ),
     role: "seller",
 
     children: [
@@ -60,7 +65,7 @@ const sellerRoutes = [
         path: "/seller/dashboard/add-product",
         element: (
           <CustomSuspense>
-            <AddProducts />
+            <AddProductMainForm />
           </CustomSuspense>
         ),
       },

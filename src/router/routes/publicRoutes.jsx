@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import UserLayout from "../../layouts/user/UserLayout";
-
+import CustomSuspense from "../../common/CustomSuspense";
 const Login = lazy(() => import("../../views/auth/Login"));
 const Register = lazy(() => import("../../views/auth/Register"));
 const Home = lazy(() => import("../../pages/Home"));
@@ -17,27 +17,46 @@ const publicRoutes = [
     children: [
       {
         path: "/",
-        element: <Home />,
+        element: (
+          <CustomSuspense>
+            <Home />
+          </CustomSuspense>
+        ),
       },
       {
         path: "*",
-        element: <Error404 />,
+        element: (
+          <CustomSuspense>
+            <Error404 />
+          </CustomSuspense>
+        ),
       },
       {
         path: "/login",
         element: (
           <RedirectIfAuthenticated>
-            <Login />
+            <CustomSuspense>
+              <Login />
+            </CustomSuspense>
           </RedirectIfAuthenticated>
         ),
       },
       {
         path: "/register",
-        element: <Register />,
+        element: (
+          <CustomSuspense>
+            <Register />
+          </CustomSuspense>
+        ),
       },
       {
         path: "/seller/register",
-        element: <SellerRegister />,
+
+        element: (
+          <CustomSuspense>
+            <SellerRegister />
+          </CustomSuspense>
+        ),
       },
     ],
   },

@@ -6,7 +6,7 @@ import Input from "../../common/Input";
 import Button from "../../common/Button";
 import AppLogo from "../../common/AppLogo";
 import { useMutation } from "react-query";
-import login from "../../services/auth/login";
+import { authService } from "../../services/auth/auth";
 import Message from "../../common/Message";
 import Loading from "react-loading";
 import { useNavigate } from "react-router-dom";
@@ -37,8 +37,9 @@ export default function Login() {
   });
 
   // Mutation setup for handling login
-  const { mutate, isError, isLoading, isSuccess, data, error } =
-    useMutation(login);
+  const { mutate, isError, isLoading, isSuccess, data, error } = useMutation(
+    authService.login
+  );
 
   // Submit handler
   function handleSubmit(values) {
@@ -50,13 +51,9 @@ export default function Login() {
         });
       },
       onSuccess: (data) => {
+        console.log(data);
         setLoginRequestMessage({ type: "success", message: "Login Success" });
-
-        // Storing token and role in local storage
-        localStorage.setItem("token", data.data.token);
-
-        // Navigate to role-based dashboard
-        navigate(`/${data.data.user.role}/dashboard`, { replace: true });
+        navigate(`/${data}/dashboard`, { replace: true });
       },
     });
   }

@@ -1,13 +1,13 @@
 import React from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
-import fetchUserInfo from "../../../services/getLoggedUserInfo";
+import { authService } from "../../../services/auth/auth";
 import { useQuery } from "react-query";
 
 export default function Header({ setShowSideBar }) {
   const token = localStorage.getItem("token");
 
   // Using useQuery to fetch user info
-  const { data } = useQuery(["user", token], fetchUserInfo, {
+  const { data } = useQuery(["user", token], authService.fetchUserInfo, {
     enabled: !!token, // Only run the query if the token exists
   });
 
@@ -27,7 +27,7 @@ export default function Header({ setShowSideBar }) {
         />
         <div className="ml-auto w-14 lg:w-16">
           <img
-            src="https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg"
+            src={`http://localhost:8000${data?.user?.image}`}
             alt="profile"
             className="w-full rounded-full"
           />

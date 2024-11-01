@@ -3,7 +3,7 @@ import { IoLogOut } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import SidebarLink from "../../admin/sidebar/SidebarLink";
 import sellerNavigation from "../../../navigation/seller";
-import logout from "../../../services/auth/logout";
+import { authService } from "../../../services/auth/auth";
 import { useNavigate } from "react-router-dom";
 export default function SidebarMenu({ setShowSideBar }) {
   const navigate = useNavigate();
@@ -31,8 +31,8 @@ export default function SidebarMenu({ setShowSideBar }) {
       {/* Log Out Button */}
       <button
         onClick={async () => {
-          await logout(); // Wait for logout to complete
-          navigate("/login", { replace: true }); // Then navigate
+          await authService.logout(); // Wait for logout to complete
+          // navigate("/login", { replace: true }); // Then navigate
         }}
         className="flex font-bold items-center p-2 rounded-lg hover:bg-gray-100 text-gray-900 mt-auto"
       >

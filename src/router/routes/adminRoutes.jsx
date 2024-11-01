@@ -59,7 +59,7 @@ const Brands = lazy(() =>
 const adminRoutes = [
   {
     element: (
-      <RedirectIfNotAuthenticated>
+      <RedirectIfNotAuthenticated allowedRoles={["admin"]}>
         <AdminLayout />
       </RedirectIfNotAuthenticated>
     ),

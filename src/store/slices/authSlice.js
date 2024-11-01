@@ -1,32 +1,29 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-// import { fetchUserInfo } from "../../services/fetchUserInfo"; // Adjust the import path
+import { authService } from "../../services/auth/auth";
 
 const initialState = {
-  userId: "",
-  user: null, // Store user info
+  user: null,
   loading: false,
   error: null,
+  isAuthenticated: authService.isTokenValid(),
 };
 
-// Create an async thunk for fetching user info
+// Async thunk to fetch current user info
 export const fetchCurrentUser = createAsyncThunk(
   "auth/fetchCurrentUser",
   async () => {
-    const userInfo = await fetchUserInfo();
-    return userInfo; // Return the user info to be used in the fulfilled action
+    return await authService.fetchUserInfo();
   }
 );
 
-export const authSlice = createSlice({
+const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    loginSuccess(state, action) {
-      state.userId = action.payload;
-    },
     logout(state) {
-      state.userId = null;
-      state.user = null; // Clear user info on logout
+      authService.logout();
+      state.user = null;
+      state.isAuthenticated = false;
     },
   },
   extraReducers: (builder) => {
@@ -36,14 +33,16 @@ export const authSlice = createSlice({
       })
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload; // Set user info
+        state.user = action.payload;
+        state.isAuthenticated = true;
       })
       .addCase(fetchCurrentUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message; // Store error message
+        state.error = action.error.message;
+        state.isAuthenticated = false;
       });
   },
 });
 
-export const { loginSuccess, logout } = authSlice.actions;
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;
