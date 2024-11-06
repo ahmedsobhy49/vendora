@@ -67,7 +67,7 @@ function DisktopTable({ showingFrom, showingTo, productsDataState }) {
     <div className="overflow-auto bg-white rounded-lg">
       <table className="hidden md:table min-w-full table-auto ">
         <thead>
-          <tr>
+          <tr className="border-b-4">
             <th className="py-4 px-4">ID</th>
             <th className="py-4 px-4">Image</th>
             <th className="py-4 px-4">Name</th>

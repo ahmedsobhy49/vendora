@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DashboardContainer from "../../../../../common/DashboardContainer";
 import { orders as originalOrdersData } from "../../../../../data/orders.json";
 import ScrollToTopOnPaginate from "../../../../../common/ScrollToTopOnPaginate";
@@ -6,14 +6,19 @@ import { GrView } from "react-icons/gr";
 import Pagination from "../../../../../common/Pagination";
 import TablesSelectDropdown from "../../../../../common/TablesSelectDropdown";
 import { Link } from "react-router-dom";
+import { useQuery } from "react-query";
+import getAllOrders from "../../../../../services/orders/getAllOrders";
+import { GiCash } from "react-icons/gi";
+import { BiSolidCreditCardAlt } from "react-icons/bi";
+import createStatusClasses from "../../../../../utils/createStatusClasses";
 
 export default function Orders() {
+  const { data: orders } = useQuery(["all-orders"], () => getAllOrders());
   const [searchQuery, setSearchQuery] = useState("");
-
-  const [ordersDataState, setOrdersDataState] = useState(originalOrdersData);
+  const [ordersDataState, setOrdersDataState] = useState([]);
   const [entriesNum, setEntriesNum] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const allEntriesNum = ordersDataState.length;
+  const allEntriesNum = ordersDataState?.length;
   const numberOfPages = Math.ceil(allEntriesNum / entriesNum);
   const showingFrom = entriesNum * (currentPage - 1);
   const showingTo =
@@ -21,24 +26,18 @@ export default function Orders() {
       ? entriesNum * (currentPage - 1) + entriesNum
       : allEntriesNum;
 
-  function createStatusClasses(state) {
-    switch (state) {
-      case "pending" && "Pending":
-        return "bg-[#FEF2E5] text-[#CD6200]";
-      case "Canceled" && "canceled ":
-        return "bg-[#FBE7E8] text-[#A30D11]";
-      case "delivered" && "Delivered":
-        return "bg-[#EBF9F1] text-[#1F9254]";
-      default:
-        return "";
+  // Set ordersDataState whenever orders?.data is available
+  useEffect(() => {
+    if (orders?.data) {
+      setOrdersDataState(orders?.data);
     }
-  }
+  }, [orders?.data]);
 
   return (
     <DashboardContainer>
       <ScrollToTopOnPaginate pageState={currentPage} />
       <div>
-        <SellerTableHeader
+        <OrdersTableHeaer
           entriesNum={entriesNum}
           setEntriesNum={setEntriesNum}
           searchQuery={searchQuery}
@@ -62,7 +61,7 @@ export default function Orders() {
           searchQuery={searchQuery}
           ordersDataState={ordersDataState}
         />
-        {ordersDataState.length ? (
+        {ordersDataState?.length ? (
           <Pagination
             numberOfPages={numberOfPages} // total number of pages that should be composed based on total number of entries (data length)
             currentPage={currentPage} // the current page are user in while pagination
@@ -85,46 +84,75 @@ function DisktopTable({
 }) {
   return (
     <div className="overflow-auto bg-white rounded-lg">
-      <table className="hidden md:table min-w-full table-auto ">
+      <table className="hidden md:table min-w-full table-auto">
         <thead>
-          <tr>
+          <tr className="border-b-4">
             <th className="py-4 px-4">Order ID</th>
+            <th className="py-4 px-4">Date</th>
             <th className="py-4 px-4">Price</th>
-            <th className="py-4 px-4">Payment Status</th>
             <th className="py-4 px-4">Order Status</th>
+            <th className="py-4 px-4">Payment Status</th>
+            <th className="py-4 px-4">Payment Method</th>
+            <th className="py-4 px-4">Sellers</th>
             <th className="py-4 px-4">Action</th>
           </tr>
         </thead>
-        {ordersDataState.length ? (
-          <tbody>
-            {ordersDataState.slice(showingFrom, showingTo).map((order) => (
+        <tbody>
+          {ordersDataState?.length ? (
+            ordersDataState.slice(showingFrom, showingTo).map((order) => (
               <tr
-                key={order.id}
+                key={order._id}
                 className="border-t hover:bg-gray-100 first:border-t-4"
               >
-                <td className="text-center py-5 px-4">#{order.id}</td>
-                <td className="text-center py-5 px-4">${order.totalPrice}</td>
+                <td className="text-center py-5 px-4">#{order?.orderId}</td>
+                <td className="text-center py-5 px-4">
+                  {new Date(order?.createdAt).toLocaleDateString()}
+                </td>
+
+                <td className="text-center py-5 px-4">
+                  ${order?.orderTotalPrice}
+                </td>
                 <td className="text-center py-5 px-4">
                   <span
                     className={`py-2 px-3 rounded-3xl ${createStatusClasses(
-                      order.orderStatus
+                      order?.orderStatus
                     )}`}
                   >
-                    {order.paymentStatus}
+                    {order?.orderStatus}
                   </span>
                 </td>
-                <td className={`text-center py-5 px-4`}>
+                <td className="text-center py-5 px-4">
                   <span
                     className={`py-2 px-3 rounded-3xl ${createStatusClasses(
-                      order.orderStatus
+                      order?.paymentStatus
                     )}`}
                   >
-                    {order.orderStatus}
+                    {order?.paymentStatus}
                   </span>
+                </td>
+                <td className="text-center py-5 px-4 flex justify-center">
+                  {order?.paymentMethod === "COD" ? (
+                    <div className="relative">
+                      <span className="absolute text-xs -top-2 -right-3 text-gray-400">
+                        COD
+                      </span>
+                      <GiCash size={40} />
+                    </div>
+                  ) : (
+                    <div className="relative">
+                      <span className="absolute text-xs -top-2 -right-3 text-gray-400">
+                        Credit Card
+                      </span>
+                      <BiSolidCreditCardAlt size={40} />
+                    </div>
+                  )}
+                </td>
+                <td className="text-center py-5 px-4">
+                  {order?.sellers.length}
                 </td>
                 <td className="text-center px-4 py-5 flex justify-center space-x-2">
                   <Link
-                    to={`/admin/dashboard/orders/${order.id}`}
+                    to={`/admin/dashboard/orders/${order?._id}`}
                     state={order}
                     className="text-green-500 text-center"
                   >
@@ -132,25 +160,25 @@ function DisktopTable({
                   </Link>
                 </td>
               </tr>
-            ))}
-          </tbody>
-        ) : (
-          <tr>
-            <td colSpan={5}>
-              <div className="flex justify-center">
-                <p className="text-center p-12 text-gray-500 text-lg">
-                  No Matched Data
-                </p>
-              </div>
-            </td>
-          </tr>
-        )}
+            ))
+          ) : (
+            <tr>
+              <td colSpan={7}>
+                <div className="flex justify-center">
+                  <p className="text-center p-12 text-gray-500 text-lg">
+                    No orders found
+                  </p>
+                </div>
+              </td>
+            </tr>
+          )}
+        </tbody>
       </table>
     </div>
   );
 }
 
-function SellerTableHeader({
+function OrdersTableHeaer({
   entriesNum,
   setEntriesNum,
   searchQuery,
@@ -208,10 +236,10 @@ function MobileTable({
   return (
     <div className="block sm:hidden">
       {/* Mobile Table: Display as list on mobile */}
-      {ordersDataState.length ? (
+      {ordersDataState?.length ? (
         ordersDataState.slice(showingFrom, showingTo).map((order) => (
           <div
-            key={order.id}
+            key={order._id}
             className="mb-2 p-4 border rounded-lg bg-gray-50 flex flex-col gap-2"
           >
             <div className="flex justify-between">

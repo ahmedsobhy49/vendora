@@ -3,60 +3,59 @@ import { MdProductionQuantityLimits } from "react-icons/md";
 import { FaUserTie } from "react-icons/fa";
 import { FaFileInvoiceDollar } from "react-icons/fa";
 import { IoCall } from "react-icons/io5";
-import getActiveSellers from "../../../../../../services/seller/getActiveSellers";
 
-const orders = [];
-const products = [
-  { id: 1, name: "Product 1", price: 100 },
-  { id: 2, name: "Product 2", price: 200 },
-  { id: 3, name: "Product 3", price: 300 },
-];
-const totalSales = orders.reduce((acc, order) => {
-  acc += order.totalPrice;
-  return acc;
-}, 0);
-
-const activeSellers = await getActiveSellers();
 function SummaryCard({ children, count, title }) {
   return (
     <div className="h-36 md:h-44 lg:h-52 bg-white shadow-md flex justify-between items-center px-5 ">
       <div>
-        <strong className="text-lg sm:text-xl md:text-3xl xl:text-xl xl:font-extrabold">
-          {count}
-        </strong>
         <p className="text-sm mt-1 md:text-lg font-bold text-gray-600 xl:text-[1.2rem]">
           {title}
         </p>
+        <strong className="text-lg sm:text-xl md:text-3xl xl:text-xl xl:font-extrabold">
+          {count}
+        </strong>
       </div>
       <div>{children}</div>
     </div>
   );
 }
 
-export default function Summaries() {
+export default function Summaries({
+  yearOrdersStatistics,
+  productsCount,
+  activeSellers,
+}) {
+  const currentMonthStatistics = yearOrdersStatistics?.monthlyStats?.filter(
+    (month) => month.current === true
+  )[0];
+
   return (
     <div className=" grid grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-1 text-black ">
-      <SummaryCard title={"Total Sales"} count={`$${totalSales}`}>
+      <SummaryCard
+        title={`${currentMonthStatistics?.monthName} Total Sales`}
+        count={`$${currentMonthStatistics?.totalSales}`}
+      >
         <FaFileInvoiceDollar
           color="#10a66c"
           className="text-[3rem] sm:text-[4rem] md:text-[6rem] xl:text-[4.5rem]"
         />
       </SummaryCard>
-
-      <SummaryCard title={"Products"} count={products.length}>
+      <SummaryCard title={"Total Products"} count={productsCount || 0}>
         <MdProductionQuantityLimits
           color="#f15313"
           className="text-[3rem] sm:text-[4rem] md:text-[6rem] xl:text-[4.5rem]"
         />
       </SummaryCard>
-
-      <SummaryCard title={"Sellers"} count={activeSellers?.length}>
+      <SummaryCard title={"Active Sellers"} count={activeSellers}>
         <FaUserTie
           color="#172554"
           className="text-[3rem] sm:text-[4rem] md:text-[6rem] xl:text-[4.5rem]"
         />
       </SummaryCard>
-      <SummaryCard title={"Orders"} count={orders.length}>
+      <SummaryCard
+        title={`${currentMonthStatistics?.monthName} Orders`}
+        count={currentMonthStatistics?.totalOrders}
+      >
         <IoCall
           color="#feb019"
           className="text-[3rem] sm:text-[4rem] md:text-[6rem] xl:text-[4.5rem]"

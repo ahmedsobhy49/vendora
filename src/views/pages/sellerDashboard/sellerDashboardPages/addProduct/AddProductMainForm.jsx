@@ -7,8 +7,11 @@ import api from "../../../../../api/api";
 import { toast } from "react-toastify";
 import { useQuery } from "react-query";
 import { authService } from "../../../../../services/auth/auth";
+import formatName from "../../../../../utils/formatName";
+import { useNavigate } from "react-router-dom";
 
 export default function AddProductMainForm() {
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const { data } = useQuery(["user", token], authService.fetchUserInfo, {
     enabled: !!token, // Only run the query if the token exists
@@ -16,24 +19,21 @@ export default function AddProductMainForm() {
   const [step, setStep] = useState(0);
   const [category, setCategory] = useState("");
   const [categoryName, setCategoryName] = useState("");
-
   async function getCateoryById(catId) {
-    console.log(catId);
     const res = await api.get(`/category/${catId}`);
-    console.log(res.data);
     setCategoryName(res.data.category.name);
   }
 
   useEffect(() => {
-    category && getCateoryById(category);
+    category && getCateoryById(category._id);
   }, [category]);
 
   const generalFormInitialValues = {
     name: "",
-    brandId: "",
-    mainCategoryId: "",
-    subCategoryId: "",
-    subSubCategoryId: "",
+    brand: "",
+    mainCategory: "",
+    subCategory: "",
+    subSubCategory: "",
     price: "",
     discount: { amount: "", startDate: null, endDate: null },
     description: "",
@@ -144,7 +144,7 @@ export default function AddProductMainForm() {
     const errors = await validateForm();
     if (Object.keys(errors).length === 0) {
       if (step === 0) {
-        setCategory(values.subCategoryId); // Ensure you're using the correct field
+        setCategory(values.subCategory); // Ensure you're using the correct field
       }
       setStep((prev) => prev + 1);
     }
@@ -158,33 +158,51 @@ export default function AddProductMainForm() {
 
   const handleSubmit = async (values, { resetForm }) => {
     console.log("values", values); // Log entire values for debugging
-    const sellerId = data.user._id; // Get the actual user ID
-
-    // Prepare formatted values for submission
-    const formattedValues = {
-      name: values.name,
-      description: values.description,
-      price: values.price,
-      brandId: values.brandId,
-      brandName: values.brandName,
-      sellerId: sellerId,
-      category: values.mainCategoryId,
-      subCategory: values.subCategoryId,
-      subSubCategory: values.subSubCategoryId,
-      tags: values.tags,
-      categorySpecificFields: values.specificFields || {}, // Ensure default value
-      shipping: values.shipping,
-      // Do not include SKU here as it is generated in the backend
+    const seller = {
+      _id: data.user._id,
+      name: formatName(data.user.firstName, data.user.lastName),
     };
 
-    console.log("Formatted values for submission:", formattedValues);
+    const formData = new FormData();
+    values.productImages.forEach((image) => {
+      formData.append("productImages", image.file); // Use `image.file` to get the File object
+    });
 
     try {
-      const res = await api.post("/product", formattedValues); // Send the actual formattedValues
+      // Upload images first
+      const uploadResponse = await api.post("/product/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("Upload response:", uploadResponse.data); // Log the
+      const uploadedImages = uploadResponse.data.images; // Extract the image URLs from the response
+
+      // Prepare formatted values for submission
+      const formattedValues = {
+        name: values.name,
+        description: values.description,
+        price: values.price,
+        brand: values.brand,
+        productImages: uploadedImages, // Use the uploaded images' URLs
+        discount: values.discount,
+        brandName: values.brandName,
+        seller: seller,
+        category: values.mainCategory,
+        subCategory: values.subCategory,
+        subSubCategory: values.subSubCategory,
+        tags: values.tags,
+        categorySpecificFields: values.specificFields || {}, // Ensure default value
+        shipping: values.shipping,
+      };
+
+      console.log("Formatted values for submission:", formattedValues);
+
+      // Now create the product with the uploaded image URLs
+      const res = await api.post("/product", formattedValues);
       console.log("API response:", res);
       toast.success("Product added successfully!");
-
-      // Reset the form fields and step
+      navigate("/seller/dashboard/all-products");
       resetForm();
       setStep(0);
       setCategory("");

@@ -1,16 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DashboardContainer from "../../../../../common/DashboardContainer";
-import { orders as originalOrdersData } from "../../../../../data/orders.json";
 import ScrollToTopOnPaginate from "../../../../../common/ScrollToTopOnPaginate";
 import { GrView } from "react-icons/gr";
 import Pagination from "../../../../../common/Pagination";
 import TablesSelectDropdown from "../../../../../common/TablesSelectDropdown";
 import { Link } from "react-router-dom";
-
+import { useQuery } from "react-query";
+import { getOrdersBySellerId } from "../../../../../services/orders/getOrdersBySellerId";
+import { authService } from "../../../../../services/auth/auth";
+import createStatusClasses from "../../../../../utils/createStatusClasses";
+import { GiCash } from "react-icons/gi";
+import { BiSolidCreditCardAlt } from "react-icons/bi";
 export default function Orders() {
+  const token = localStorage.getItem("token");
+
+  // Using useQuery to fetch user info
+  const { data: seller } = useQuery(
+    ["user", token],
+    authService.fetchUserInfo,
+    {
+      enabled: !!token, // Only run the query if the token exists
+    }
+  );
+
+  const { data: sellerOrders } = useQuery(
+    ["seller-orders", seller?.user._id],
+    () => getOrdersBySellerId(seller?.user._id)
+  );
+
+  console.log(sellerOrders?.data);
+  console.log(sellerOrders?.data);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [ordersDataState, setOrdersDataState] = useState(originalOrdersData);
+  const [ordersDataState, setOrdersDataState] = useState([]);
   const [entriesNum, setEntriesNum] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const allEntriesNum = ordersDataState.length;
@@ -21,19 +43,12 @@ export default function Orders() {
       ? entriesNum * (currentPage - 1) + entriesNum
       : allEntriesNum;
 
-  function createStatusClasses(state) {
-    switch (state) {
-      case "pending" && "Pending":
-        return "bg-[#FEF2E5] text-[#CD6200]";
-      case "Canceled" && "canceled ":
-        return "bg-[#FBE7E8] text-[#A30D11]";
-      case "delivered" && "Delivered":
-        return "bg-[#EBF9F1] text-[#1F9254]";
-      default:
-        return "";
+  // Set ordersDataState whenever orders?.data is available
+  useEffect(() => {
+    if (sellerOrders?.data) {
+      setOrdersDataState(sellerOrders?.data);
     }
-  }
-
+  }, [sellerOrders?.data]);
   return (
     <DashboardContainer>
       <ScrollToTopOnPaginate pageState={currentPage} />
@@ -87,11 +102,13 @@ function DisktopTable({
     <div className="overflow-auto bg-white rounded-lg">
       <table className="hidden md:table min-w-full table-auto ">
         <thead>
-          <tr>
+          <tr className="border-b-4">
             <th className="py-4 px-4">Order ID</th>
+            <th className="py-4 px-4">Date</th>
             <th className="py-4 px-4">Price</th>
-            <th className="py-4 px-4">Payment Status</th>
             <th className="py-4 px-4">Order Status</th>
+            <th className="py-4 px-4">Payment Status</th>
+            <th className="py-4 px-4">Payment Method</th>
             <th className="py-4 px-4">Action</th>
           </tr>
         </thead>
@@ -99,17 +116,14 @@ function DisktopTable({
           <tbody>
             {ordersDataState.slice(showingFrom, showingTo).map((order) => (
               <tr key={order.id} className="border-t hover:bg-gray-100 ">
-                <td className="text-center py-5 px-4">#{order.id}</td>
-                <td className="text-center py-5 px-4">${order.totalPrice}</td>
+                <td className="text-center py-5 px-4">#{order?.orderId}</td>
                 <td className="text-center py-5 px-4">
-                  <span
-                    className={`py-2 px-3 rounded-3xl ${createStatusClasses(
-                      order.orderStatus
-                    )}`}
-                  >
-                    {order.paymentStatus}
-                  </span>
+                  {new Date(order?.createdAt).toLocaleDateString()}
                 </td>
+                <td className="text-center py-5 px-4">
+                  ${order?.sellers[0]?.totalPrice}
+                </td>
+
                 <td className={`text-center py-5 px-4`}>
                   <span
                     className={`py-2 px-3 rounded-3xl ${createStatusClasses(
@@ -119,11 +133,39 @@ function DisktopTable({
                     {order.orderStatus}
                   </span>
                 </td>
-                <td className="text-center px-4 py-5 flex justify-center space-x-2">
+
+                <td className="text-center py-5 px-4">
+                  <span
+                    className={`py-2 px-3 rounded-3xl ${createStatusClasses(
+                      order.orderStatus
+                    )}`}
+                  >
+                    {order.paymentStatus}
+                  </span>
+                </td>
+
+                <td className="text-center py-5 px-4 flex justify-center">
+                  {order?.paymentMethod === "COD" ? (
+                    <div className="relative">
+                      <span className="absolute text-xs -top-2 -right-3 text-gray-400">
+                        COD
+                      </span>
+                      <GiCash size={40} />
+                    </div>
+                  ) : (
+                    <div className="relative">
+                      <span className="absolute text-xs -top-2 -right-3 text-gray-400">
+                        Credit Card
+                      </span>
+                      <BiSolidCreditCardAlt size={40} />
+                    </div>
+                  )}
+                </td>
+                <td>
                   <Link
-                    to={`/admin/dashboard/orders/${order.id}`}
+                    to={`/seller/dashboard/orders/${order.id}`}
                     state={order}
-                    className="text-green-500 text-center"
+                    className="text-green-500 text-center flex justify-center"
                   >
                     <GrView size={25} />
                   </Link>
@@ -133,10 +175,10 @@ function DisktopTable({
           </tbody>
         ) : (
           <tr>
-            <td colSpan={5}>
+            <td colSpan={7}>
               <div className="flex justify-center">
                 <p className="text-center p-12 text-gray-500 text-lg">
-                  No Matched Data
+                  No Orders found
                 </p>
               </div>
             </td>

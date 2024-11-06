@@ -1,19 +1,25 @@
 import Chart from "react-apexcharts";
 import "../../../../../../App.css";
-export default function Statistics() {
+
+export default function Statistics({ ordersStatistics, productsStatistics }) {
+  const ordersData = ordersStatistics?.map((stat) => stat?.totalOrders) || [];
+  const revenueData =
+    ordersStatistics?.map((stat) => stat?.totalSales / 1000) || [];
+  const productsData = productsStatistics?.map((stat) => stat.count) || [];
+
   const state = {
     series: [
       {
         name: "Orders",
-        data: [23, 34, 45, 56, 76, 34, 23, 76, 87, 78, 87, 78],
+        data: ordersData,
       },
       {
         name: "Revenue",
-        data: [23, 34, 45, 56, 76, 34, 23, 76, 87, 78, 87, 78],
+        data: revenueData,
       },
       {
-        name: "Sellers",
-        data: [23, 34, 45, 56, 76, 34, 23, 76, 87, 78, 87, 78],
+        name: "Products",
+        data: productsData,
       },
     ],
     options: {
@@ -58,10 +64,13 @@ export default function Statistics() {
       },
       yaxis: {
         min: 0,
-        max: 100,
+        max: 10,
         tickAmount: 5,
         labels: {
           style: { fontSize: "13px" },
+          formatter: function (val) {
+            return val; // Display values directly (5, 10, 15, ..., 100)
+          },
         },
       },
       fill: {
@@ -69,8 +78,12 @@ export default function Statistics() {
       },
       tooltip: {
         y: {
-          formatter: function (val) {
-            return "$ " + val;
+          formatter: function (val, { seriesIndex, w }) {
+            const seriesName = w.config.series[seriesIndex].name;
+            return seriesName === "Revenue" ? `$${val}k` : val; // Format Revenue with "$" and "k"
+          },
+          title: {
+            formatter: (seriesName) => `${seriesName}:`,
           },
         },
       },

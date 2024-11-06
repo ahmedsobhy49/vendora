@@ -1,14 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import DashboardContainer from "../../../../../common/DashboardContainer";
 import { LiaShippingFastSolid } from "react-icons/lia";
+import formatName from "../../../../../utils/formatName";
+import getAddressByUserId from "../../../../../services/address/getAdressByUserId";
+import createStatusClasses from "../../../../../utils/createStatusClasses";
 
 export default function OrderDetails() {
-  const order = useLocation().state;
+  const location = useLocation();
+  const order = location.state;
+  const [userAddress, setUserAddress] = useState(null);
 
-  const allSellers = order.fromSellers.filter((seller) => {
-    return seller;
-  });
+  useEffect(() => {
+    const fetchAddress = async () => {
+      try {
+        const userAddress = await getAddressByUserId(order.user._id);
+        setUserAddress(userAddress);
+      } catch (error) {
+        console.error("Failed to fetch user address:", error);
+      }
+    };
+
+    if (order?.user?._id) {
+      fetchAddress(); // Call the async function
+    }
+  }, [order]); // Depend on 'order' instead of 'location'
 
   return (
     <DashboardContainer>
@@ -23,27 +39,35 @@ export default function OrderDetails() {
                 Products
               </h4>
               <div className="max-h-[15rem] overflow-auto">
-                {allSellers.map((seller) => {
+                {order?.sellers.map((seller, index) => {
                   return (
-                    <div key={seller.id}>
+                    <div key={index}>
                       <div>
-                        {seller.products.map((product) => {
+                        {seller.items.map((product) => {
                           return (
                             <div
-                              key={product.id}
+                              key={product?.product?._id}
                               className="flex items-center gap-10 md:gap-16 mb-4"
                             >
-                              <ProductImage src={product.image} />
+                              <ProductImage
+                                src={`http://localhost:8000${product?.product?.productImages[0].url}`}
+                              />
                               <div>
-                                <ProductName title={product.name} />
+                                <ProductName title={product?.product?.name} />
                                 <ProductDetailContainer>
                                   <ProductDetailTitle title={"Seller"} />
-                                  <ProductDetailData data={seller.shopName} />
+                                  <ProductDetailData
+                                    data={
+                                      seller.seller.businessInfo.companyName
+                                    }
+                                  />
                                 </ProductDetailContainer>
 
                                 <ProductDetailContainer>
                                   <ProductDetailTitle title={"Price"} />
-                                  <ProductDetailData data={product.price} />
+                                  <ProductDetailData
+                                    data={product?.product?.price}
+                                  />
                                 </ProductDetailContainer>
 
                                 <ProductDetailContainer>
@@ -63,7 +87,7 @@ export default function OrderDetails() {
           </div>
           <div className="hidden xl:grid xl:grid-cols-1 xl:grid-rows-2 xl:gap-4">
             <DeliverdTo order={order} />
-            <ShippingAdress order={order} />
+            <ShippingAdress userAddress={userAddress} />
           </div>
         </div>
         {/* user details  */}
@@ -71,10 +95,10 @@ export default function OrderDetails() {
           <DeliverdTo order={order} />
 
           {/* shipping details  */}
-          <ShippingAdress order={order} />
+          <ShippingAdress userAddress={userAddress} />
         </div>
         {/* seller details  */}
-        <SellerDetails allSellers={allSellers} />
+        <SellerDetails order={order} />
       </div>
     </DashboardContainer>
   );
@@ -89,7 +113,15 @@ function DetailTitle({ title }) {
 }
 
 function DetailData({ data }) {
-  return <p className="text-gray-600 text-xs sm:text-sm">{data}</p>;
+  return (
+    <p
+      className={` text-xs sm:text-sm p-2 rounded-lg ${createStatusClasses(
+        data
+      )}`}
+    >
+      {data}
+    </p>
+  );
 }
 function DetailContainer({ children }) {
   return <div className="flex items-center justify-between">{children}</div>;
@@ -131,27 +163,33 @@ function ProductImage({ src }) {
   );
 }
 
-function SellerDetails({ allSellers }) {
+function SellerDetails({ order }) {
   return (
     <div className="bg-white p-6">
       <MainHeading title={"Sellers"} />
       <div className="max-h-[25rem] overflow-auto">
-        {allSellers.map((seller, index) => {
+        {order?.sellers?.map((seller, index) => {
           return (
-            <div className="mb-10 last:mb-0" key={seller.id}>
+            <div className="mb-10 last:mb-0" key={index}>
               <DetailContainer>
-                <DetailTitle title={`${index + 1}-${seller.shopName}`} />
+                <DetailTitle
+                  title={`${index + 1}-${
+                    seller?.seller?.businessInfo?.companyName
+                  }`}
+                />
               </DetailContainer>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-                {seller.products.map((product) => {
+                {seller.items?.map((product) => {
                   return (
                     <div
-                      key={product.id}
+                      key={product?.product?._id}
                       className="flex items-start gap-10 sm:gap-6 md:gap-10 2xl:gap-4  my-4"
                     >
-                      <ProductImage src={product.image} />
+                      <ProductImage
+                        src={`http://localhost:8000${product?.product?.productImages[0].url}`}
+                      />
                       <div>
-                        <ProductName title={product.name} />
+                        <ProductName title={product?.product?.name} />
 
                         <ProductDetailContainer>
                           <ProductDetailTitle title={"Price"} />
@@ -175,18 +213,18 @@ function SellerDetails({ allSellers }) {
   );
 }
 
-function ShippingAdress({ order }) {
+function ShippingAdress({ userAddress }) {
   return (
     <div className="bg-white p-6">
       <MainHeading title={"Shipping Addsress"} />
       <div className="flex items-center justify-between">
         <div>
           <p>
-            <span>{order?.toUser?.address?.apartment}</span>
-            <span className="capitalize">{order?.toUser?.address?.street}</span>
+            <span>{userAddress?.buildingNumber}</span>
+            <span className="capitalize">{userAddress?.street}</span>
           </p>
-          <p className="uppercase">{order?.toUser?.address?.state} </p>
-          <p className="uppercase">{order?.toUser?.address?.country}</p>
+          <p className="uppercase">{userAddress?.state} </p>
+          <p className="uppercase">{userAddress?.country}</p>
         </div>
         <div>
           <LiaShippingFastSolid size={130} color="#e2e8f0" />
@@ -203,17 +241,19 @@ function DeliverdTo({ order }) {
       <div className="grid gird-cols-1 gap-4">
         <DetailContainer>
           <DetailTitle title={"Name"} />
-          <DetailData data={order.toUser.name} />
+          <DetailData
+            data={formatName(order?.user?.firstName, order?.user?.lastName)}
+          />
         </DetailContainer>
 
         <DetailContainer>
           <DetailTitle title={"Email"} />
-          <DetailData data={order.toUser.contant.email} />
+          <DetailData data={order?.user?.email} />
         </DetailContainer>
 
         <DetailContainer>
           <DetailTitle title={"Phone"} />
-          <DetailData data={order.toUser.contant.phone} />
+          <DetailData data={order?.user?.phone} />
         </DetailContainer>
       </div>
     </div>
@@ -227,22 +267,22 @@ function OrderInfo({ order }) {
       <div className="grid gird-cols-1 gap-2 mb-8">
         <DetailContainer>
           <DetailTitle title={"Order Id"} />
-          <DetailData data={`#${order.id}`} />
+          <DetailData data={`#${order?.orderId}`} />
         </DetailContainer>
 
         <DetailContainer>
           <DetailTitle title={"Order Date"} />
-          <DetailData data={order.orderDate} />
+          <DetailData data={order?.createdAt} />
         </DetailContainer>
 
         <DetailContainer>
           <DetailTitle title={"Total Price"} />
-          <DetailData data={`$${order.totalPrice}`} />
+          <DetailData data={`$${order?.orderTotalPrice}`} />
         </DetailContainer>
 
         <DetailContainer>
           <DetailTitle title={"Payment Status"} />
-          <DetailData data={order.paymentStatus} />
+          <DetailData data={order?.paymentStatus} />
         </DetailContainer>
       </div>
     </>

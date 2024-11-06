@@ -2,6 +2,7 @@ import { lazy } from "react";
 import SellerLayout from "../../layouts/seller/SellerLayout";
 import CustomSuspense from "../../common/CustomSuspense";
 import RedirectIfNotAuthenticated from "./RedirectIfNotAuthenticated";
+import OrderDetails from "../../views/pages/sellerDashboard/sellerDashboardPages/orders/OrdersDetails";
 
 const AddProductMainForm = lazy(() =>
   import(
@@ -90,6 +91,14 @@ const sellerRoutes = [
         element: (
           <CustomSuspense>
             <Orders />
+          </CustomSuspense>
+        ),
+      },
+      {
+        path: "/seller/dashboard/orders/:orderId",
+        element: (
+          <CustomSuspense>
+            <OrderDetails />
           </CustomSuspense>
         ),
       },

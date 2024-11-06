@@ -5,13 +5,12 @@ import ScrollToTopOnPaginate from "../../../../../common/ScrollToTopOnPaginate";
 import { GrView } from "react-icons/gr";
 import Pagination from "../../../../../common/Pagination";
 import TablesSelectDropdown from "../../../../../common/TablesSelectDropdown";
-import { parentCategories } from "../../../../../data/parentCategories.json";
 import getRelatedSellerProducts from "../../../../../services/products/getRelatedSellerProducts";
 import { useQuery } from "react-query";
 import { authService } from "../../../../../services/auth/auth";
+import getTotalStockCount from "../../../../../utils/getTotalStockCount";
 export default function AllProducts() {
-  const [productsDataState, setProductsDataState] =
-    useState(originaProductsData);
+  const [productsDataState, setProductsDataState] = useState([]);
   const token = localStorage.getItem("token");
 
   // Using useQuery to fetch user info
@@ -22,24 +21,20 @@ export default function AllProducts() {
       enabled: !!token, // Only run the query if the token exists
     }
   );
-  const {
-    data: products,
-    isLoading: loadingProducts,
-    isError: errorProducts,
-  } = useQuery(
-    ["products", seller?.user?._id],
-    () => getRelatedSellerProducts(seller?.user?._id),
-    {
-      enabled: !!seller?.user?._id,
-      onSuccess: (fetchedProducts) => {
-        console.log(fetchedProducts.data);
-        setProductsDataState(fetchedProducts?.data); // Set state with fetched products
-      },
-    }
-  );
-  // console.log(seller.user._id);
 
-  console.log(products?.data);
+  const { data: products } = useQuery(
+    ["products", seller?.user._id],
+    () => getRelatedSellerProducts(seller?.user._id), // Passing as a function
+    {
+      enabled: !!seller?.user._id,
+      onSuccess: (fetchedProducts) => {
+        setProductsDataState(fetchedProducts?.data); // Set state with
+      },
+    } // Only run if seller's ID is available
+  );
+
+  console.log("seller", seller?.user._id);
+  console.log("products", products?.data);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [entriesNum, setEntriesNum] = useState(5);
@@ -98,8 +93,8 @@ function DisktopTable({ showingFrom, showingTo, productsDataState }) {
     <div className="overflow-auto bg-white rounded-lg">
       <table className="hidden md:table min-w-full table-auto ">
         <thead>
-          <tr>
-            <th className="py-4 px-4">ID</th>
+          <tr className="border-b-4">
+            {/* <th className="py-4 px-4">ID</th> */}
             <th className="py-4 px-4">Image</th>
             <th className="py-4 px-4">Name</th>
             <th className="py-4 px-4">Category</th>
@@ -113,20 +108,14 @@ function DisktopTable({ showingFrom, showingTo, productsDataState }) {
         {productsDataState?.length ? (
           <tbody>
             {productsDataState?.slice(showingFrom, showingTo).map((product) => {
-              // Find the parent category name
-              const parentCategory = parentCategories.find(
-                (parentCategory) =>
-                  parentCategory.id === product.category.parentId
-              );
-
               return (
                 <tr key={product._id} className="border-t hover:bg-gray-100 ">
-                  <td className="text-center py-0 px-4">#{product._id}</td>
+                  {/* <td className="text-center py-0 px-4">#{product._id}</td> */}
                   <td className="text-center py-0 px-4">
                     <div className="w-12 mx-auto md:w-16 xl:w-20 rounded-full">
                       <img
-                        // src={product.images[0].url}
-                        // alt={product.images[0].altText}
+                        src={`http://localhost:8000${product?.productImages[0].url}`}
+                        alt={`http://localhost:8000${product?.productImages[0].altText}`}
                         className="w-full aspect-square rounded-full border-4 shadow-2xl"
                       />
                     </div>
@@ -137,30 +126,26 @@ function DisktopTable({ showingFrom, showingTo, productsDataState }) {
                     </span>
                   </td>
                   <td className={`text-center py-0 px-4`}>
+                    {product?.category.name}
+                  </td>
+                  <td className={`text-center py-0 px-4`}>
                     <span className={`py-2 px-3 rounded-3xl `}>
-                      {parentCategory
-                        ? parentCategory.name
-                        : "Unknown Category"}
+                      {product?.brand.name}
                     </span>
                   </td>
                   <td className={`text-center py-0 px-4`}>
                     <span className={`py-2 px-3 rounded-3xl `}>
-                      {product.brandId}
+                      ${product?.price}
                     </span>
                   </td>
                   <td className={`text-center py-0 px-4`}>
                     <span className={`py-2 px-3 rounded-3xl `}>
-                      ${product.price}
+                      %{product?.discount?.amount || 0}
                     </span>
                   </td>
                   <td className={`text-center py-0 px-4`}>
                     <span className={`py-2 px-3 rounded-3xl `}>
-                      %{product.discount.amount}
-                    </span>
-                  </td>
-                  <td className={`text-center py-0 px-4`}>
-                    <span className={`py-2 px-3 rounded-3xl `}>
-                      {product.stock}
+                      {getTotalStockCount(product, product?.category?.name)}
                     </span>
                   </td>
                   <td className="text-center py-0 px-4 flex justify-center space-x-2 h-24">
@@ -261,27 +246,23 @@ function MobileTable({ showingFrom, showingTo, productsDataState }) {
             </div>
             <div className="flex justify-between">
               <strong>Product ID: </strong>
-              <p className="p-2">#{product._id}</p>
+              <p className="p-2">#{product?._id}</p>
             </div>
             <div className="flex justify-between">
               <strong>Name:</strong>
-              <p className="p-2">{product.name}</p>
+              <p className="p-2">{product?.name}</p>
             </div>
             <div className="flex justify-between">
               <strong>Price:</strong>
-              <p className="p-2">${product.price}</p>
+              <p className="p-2">${product?.price}</p>
             </div>
             <div className="flex justify-between">
               <strong>Category:</strong>
-              <p className={`p-2`}>
-                {parentCategories.find(
-                  (category) => category.id === product.category.parentId
-                )?.name || "N/A"}
-              </p>
+              <p className={`p-2`}></p>
             </div>
             <div className="flex justify-between">
               <strong>Brand:</strong>
-              <p className={`p-2`}>{product.brand}</p>
+              <p className={`p-2`}>{product?.brand.name}</p>
             </div>
             <div className="flex justify-between">
               <strong>Stock:</strong>

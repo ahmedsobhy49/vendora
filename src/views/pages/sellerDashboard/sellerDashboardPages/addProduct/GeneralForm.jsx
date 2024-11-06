@@ -10,15 +10,17 @@ import api from "../../../../../api/api";
 import { DateInput } from "rsuite";
 import moment from "moment";
 import { TagsInput } from "react-tag-input-component";
+
 export const generalFormValidationSchema = Yup.object().shape({
   name: Yup.string()
     .min(3, "Product name must be at least 3 characters")
     .required("Product name is required"),
+  brand: Yup.mixed(),
   brandName: Yup.string()
     .nullable()
     .test("brandName-required", "Brand name is required ", function (value) {
-      const { brandId } = this.parent; // Access the parent object to get brandId
-      if (brandId === null && !value) {
+      const { brand } = this.parent; // Access the parent object to get brandId
+      if (brand === "other") {
         return this.createError({
           path: "brandName",
           message: "Brand name is required",
@@ -26,8 +28,8 @@ export const generalFormValidationSchema = Yup.object().shape({
       }
       return true; // Valid if brandId is not null or if brandName has a value
     }),
-  mainCategoryId: Yup.string().required("Main category is required"),
-  subCategoryId: Yup.string().required("Subcategory is required"),
+  mainCategory: Yup.mixed().required("Main category is required"),
+  subCategory: Yup.mixed().required("Subcategory is required"),
   price: Yup.number()
     .required("Price is required")
     .positive("Price must be a positive number"),
@@ -111,13 +113,11 @@ export const generalFormValidationSchema = Yup.object().shape({
 });
 
 export default function GeneralForm({ handleNext, setFieldValue, values }) {
-  // console.log(values);
   const [mainCategories, setMainCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [subSubCategories, setSubSubCategories] = useState([]);
   const [brands, setBrands] = useState([]);
 
-  console.log(mainCategories);
   async function fetchAllParentCategories() {
     const res = await getAllParentCategories();
     setMainCategories(res.data.categories);
@@ -180,8 +180,8 @@ function AddProductsForm({
   setBrands,
   brands,
 }) {
-  const [selectedMainCategoryId, setSelectedMainCategoryId] = useState("");
-  const [selectedSubCategoryId, setSelectedSubCategoryId] = useState("");
+  const [selectedMainCategory, setSelectedMainCategory] = useState("");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
 
   return (
     <>
@@ -190,7 +190,7 @@ function AddProductsForm({
         <ProductNameInput />
         <MainCategoryInput
           setFieldValue={setFieldValue}
-          setSelectedMainCategoryId={setSelectedMainCategoryId}
+          setSelectedMainCategory={setSelectedMainCategory}
           getSubCategoriesOfSelectedMainCategories={
             getSubCategoriesOfSelectedMainCategories
           }
@@ -202,10 +202,10 @@ function AddProductsForm({
       </div>
 
       <div className="mb-4">
-        {selectedMainCategoryId && subCategories.length > 0 && (
+        {selectedMainCategory && subCategories.length > 0 && (
           <SubCategoryInput
             setFieldValue={setFieldValue}
-            setSelectedSubCategoryId={setSelectedSubCategoryId}
+            setSelectedSubCategory={setSelectedSubCategory}
             getSubCategoriesOfSelectedMainCategories={
               getSubCategoriesOfSelectedMainCategories
             }
@@ -217,7 +217,7 @@ function AddProductsForm({
       </div>
 
       <div className="mb-4">
-        {selectedSubCategoryId && subSubCategories.length > 0 && (
+        {selectedSubCategory && subSubCategories.length > 0 && (
           <SubSubCategoryInput
             setFieldValue={setFieldValue}
             subSubCategories={subSubCategories}
@@ -225,7 +225,7 @@ function AddProductsForm({
         )}
       </div>
       <div className="mb-4">
-        {selectedMainCategoryId && selectedSubCategoryId && (
+        {selectedMainCategory && selectedSubCategory && (
           <BrandNameSelect setFieldValue={setFieldValue} brands={brands} />
         )}
       </div>
@@ -275,7 +275,7 @@ function AddProductsForm({
 
 function MainCategoryInput({
   setFieldValue,
-  setSelectedMainCategoryId,
+  setSelectedMainCategory,
   getSubCategoriesOfSelectedMainCategories,
   setSubCategories,
   mainCategories,
@@ -285,36 +285,39 @@ function MainCategoryInput({
   return (
     <div className="flex flex-col gap-1">
       <label className="block text-gray-700">Main Category</label>
-      <Field name="mainCategoryId">
+      <Field name="mainCategory">
         {({ field }) => (
           <>
             <Select
-              {...field} // Spread Formik's field props for controlled input
+              value={field.value ? JSON.stringify(field.value) : ""} // Stringify the object to handle Select value
               onChange={async (event) => {
-                const selectedCategory = event.target.value;
-                console.log(selectedCategory);
-                setFieldValue("mainCategoryId", selectedCategory);
-                setSelectedMainCategoryId(selectedCategory); // Set the selected main category
-
-                // Fetch subcategories and brands
+                const selectedMainCategory = JSON.parse(event.target.value); // Parse back to object
+                setFieldValue("mainCategory", selectedMainCategory); // Store the entire object in Formik
+                setSelectedMainCategory(selectedMainCategory); // Update state if needed
+                // Fetch subcategories and brands based on the selected category
                 const subCategoriesResponse =
                   await getSubCategoriesOfSelectedMainCategories(
-                    selectedCategory._id
+                    selectedMainCategory._id
                   );
-                setSubCategories(subCategoriesResponse.data.categories); // Update subCategories state
+                setSubCategories(subCategoriesResponse.data.categories);
 
-                const brandsResponse = await getBrands(selectedCategory._id);
+                const brandsResponse = await getBrands(
+                  selectedMainCategory?._id
+                );
                 setBrands(brandsResponse.data.brands);
               }}
               displayEmpty
               renderValue={(selected) => {
-                return selected ? (
-                  mainCategories.find((main) => main === selected)?.name
+                const selectedCategory = selected
+                  ? JSON.parse(selected).name
+                  : null;
+                return selectedCategory ? (
+                  selectedCategory
                 ) : (
                   <span style={{ color: "#BDBDBD" }}>
                     Select the main category
                   </span>
-                ); // Placeholder style
+                );
               }}
               MenuProps={{
                 PaperProps: {
@@ -331,13 +334,13 @@ function MainCategoryInput({
               }}
             >
               {mainCategories?.map((main) => (
-                <MenuItem key={main._id} value={main}>
+                <MenuItem key={main._id} value={JSON.stringify(main)}>
                   {main.name}
                 </MenuItem>
               ))}
             </Select>
             <ErrorMessage
-              name="mainCategoryId"
+              name="mainCategory"
               component="div"
               className="text-red-600"
             />
@@ -350,7 +353,7 @@ function MainCategoryInput({
 
 function SubCategoryInput({
   setFieldValue,
-  setSelectedSubCategoryId,
+  setSelectedSubCategory,
   getSubCategoriesOfSelectedMainCategories,
   subCategories,
   setSubSubCategories,
@@ -362,11 +365,12 @@ function SubCategoryInput({
         {({ field }) => (
           <>
             <Select
+              value={field.value ? JSON.stringify(field.value) : ""} // Stringify the object to handle Select value
               {...field} // Spread Formik's field props for controlled input
               displayEmpty
               renderValue={(selected) => {
                 return selected ? (
-                  subCategories?.find((sub) => sub._id === selected)?.name
+                  subCategories?.find((sub) => sub === selected)?.name
                 ) : (
                   <span style={{ color: "#BDBDBD" }}>
                     Select the subcategory
@@ -374,13 +378,14 @@ function SubCategoryInput({
                 );
               }}
               onChange={async (event) => {
-                const selectedSubCategoryId = event.target.value;
-                setFieldValue("subCategoryId", selectedSubCategoryId);
-                setSelectedSubCategoryId(selectedSubCategoryId); // Set the selected subcategory
+                const selectedSubCategory = event.target.value;
+
+                setFieldValue("subCategory", selectedSubCategory);
+                setSelectedSubCategory(selectedSubCategory); // Set the selected subcategory
 
                 // Fetch sub-subcategories based on the selected subcategory
                 const res = await getSubCategoriesOfSelectedMainCategories(
-                  selectedSubCategoryId
+                  selectedSubCategory._id
                 );
                 setSubSubCategories(res.data.categories); // Update subSubCategories state
               }}
@@ -403,7 +408,7 @@ function SubCategoryInput({
               }}
             >
               {subCategories?.map((sub) => (
-                <MenuItem key={sub._id} value={sub._id}>
+                <MenuItem key={sub._id} value={sub}>
                   {sub.name}
                 </MenuItem>
               ))}
@@ -432,8 +437,7 @@ function SubSubCategoryInput({ setFieldValue, subSubCategories }) {
               displayEmpty
               renderValue={(selected) => {
                 return selected ? (
-                  subSubCategories.find((subSub) => subSub._id === selected)
-                    ?.name
+                  subSubCategories.find((subSub) => subSub === selected)?.name
                 ) : (
                   <span style={{ color: "#BDBDBD" }}>
                     Select the sub-subcategory
@@ -441,8 +445,8 @@ function SubSubCategoryInput({ setFieldValue, subSubCategories }) {
                 );
               }}
               onChange={(event) => {
-                const selectedSubSubCategoryId = event.target.value;
-                setFieldValue("subSubCategoryId", selectedSubSubCategoryId);
+                const selectedSubSubCategory = event.target.value;
+                setFieldValue("subSubCategory", selectedSubSubCategory);
               }}
               MenuProps={{
                 PaperProps: {
@@ -463,7 +467,7 @@ function SubSubCategoryInput({ setFieldValue, subSubCategories }) {
               }}
             >
               {subSubCategories?.map((subSub) => (
-                <MenuItem key={subSub._id} value={subSub._id}>
+                <MenuItem key={subSub._id} value={subSub}>
                   {subSub.name}
                 </MenuItem>
               ))}
@@ -481,13 +485,32 @@ function SubSubCategoryInput({ setFieldValue, subSubCategories }) {
 }
 
 function ProductImagesInput({ setFieldValue, values }) {
-  const handleFileChange = (event) => {
+  // const handleFileChange = (event) => {
+  //   console.log("change", event.target.files[0]);
+  //   const files = event.currentTarget.files;
+  //   const imagesArray = Array.from(files).map((file) => ({
+  //     url: URL.createObjectURL(file),
+  //     altText: file.name,
+  //   }));
+  //   setFieldValue("productImages", [
+  //     ...(values.productImages || []),
+  //     ...imagesArray,
+  //   ]);
+  // };
+  const handleFileChange = async (event) => {
     const files = event.currentTarget.files;
-    const imagesArray = Array.from(files).map((file) => ({
-      url: URL.createObjectURL(file),
-      altText: file.name,
-    }));
-    setFieldValue("productImages", [...values.productImages, ...imagesArray]); // Append new images to existing ones
+    const imagesArray = await Promise.all(
+      Array.from(files).map((file) => ({
+        url: URL.createObjectURL(file), // Use object URL for immediate preview
+        altText: file.name,
+        file: file, // Store the actual File object
+      }))
+    );
+
+    setFieldValue("productImages", [
+      ...(values.productImages || []),
+      ...imagesArray,
+    ]);
   };
 
   return (
@@ -499,8 +522,7 @@ function ProductImagesInput({ setFieldValue, values }) {
           if (e.target.dataset.type === "remove") {
             return;
           }
-          console.log(e.target.dataset.type);
-          document.getElementById("file-upload").click();
+          document.getElementById("product-image-upload").click();
         }}
       >
         {values?.productImages?.length > 0 ? (
@@ -531,7 +553,7 @@ function ProductImagesInput({ setFieldValue, values }) {
         ) : (
           <>
             <LuUploadCloud size={50} color="#338ffb" className="w-full" />
-            <p className="text-gray-500">Click to upload or drag and drop</p>
+            <p className="text-gray-500">Click to upload </p>
             <p className="text-gray-500">
               SVG, PNG, JPG or GIF (Max. 800x400px)
             </p>
@@ -540,8 +562,9 @@ function ProductImagesInput({ setFieldValue, values }) {
       </div>
 
       <input
-        id="file-upload"
+        id="product-image-upload"
         type="file"
+        accept="image/png, image/jpeg, image/webp"
         multiple
         className="hidden"
         onChange={handleFileChange}
@@ -619,34 +642,43 @@ function BrandNameSelect({ brands, setFieldValue }) {
   return (
     <div className="flex flex-col gap-1">
       <label className="block text-gray-700">Brand</label>
-      <Field name="brandId">
+      <Field name="brand">
         {({ field }) => (
           <>
             <Select
-              {...field} // Spread Formik's field props for controlled input
+              value={field.value ? JSON.stringify(field.value) : ""} // Stringify the object to handle Select value
               displayEmpty
               renderValue={(selected) => {
-                console.log(selected);
-                if (selected === null) {
+                console.log("selected", selected);
+                if (selected === "") {
                   return <span style={{ color: "#BDBDBD" }}>Other</span>; // Display label for "Other"
                 }
                 return selected ? (
-                  brands.find((brand) => brand._id === selected)?.name
+                  brands.find(
+                    (brand) => brand.name == JSON.parse(selected).name
+                  )?.name
                 ) : (
                   <span style={{ color: "#BDBDBD" }}>Select a brand</span> // Placeholder style
                 );
               }}
-              onChange={(event) => {
-                const selectedBrand = event.target.value;
-                if (selectedBrand === "other") {
+              onChange={async (event) => {
+                const selectedValue = event.target.value;
+                if (selectedValue === "other") {
                   setIsOther(true);
-                  setFieldValue("brandId", null); // Clear the brandId
-                  setFieldValue("brandName", ""); // Clear any previous brand name
+                  setFieldValue("brand", ""); // Clear brandId for manual entry
+                  setFieldValue("brandName", ""); // Initialize brandName
                   return;
+                } else {
+                  setIsOther(false);
+                  try {
+                    const parsedSelectedBrand = JSON.parse(selectedValue);
+                    console.log(parsedSelectedBrand);
+                    setFieldValue("brand", parsedSelectedBrand);
+                    setFieldValue("brandName", null); // Clear brandName if a valid brand is selected
+                  } catch (error) {
+                    console.error("Failed to parse selected brand:", error); // Handle parse errors
+                  }
                 }
-                setIsOther(false);
-                setFieldValue("brandId", selectedBrand);
-                setFieldValue("brandName", ""); // Clear brand name if a valid brand is selected
               }}
               MenuProps={{
                 PaperProps: {
@@ -670,7 +702,7 @@ function BrandNameSelect({ brands, setFieldValue }) {
                 <MenuItem
                   className="capitalize"
                   key={brand._id}
-                  value={brand._id}
+                  value={JSON.stringify(brand)}
                 >
                   {brand.name}
                 </MenuItem>
@@ -681,7 +713,7 @@ function BrandNameSelect({ brands, setFieldValue }) {
             </Select>
             {isOther && <BrandNameInput />}
             <ErrorMessage
-              name="brandId" // Changed to match the field name
+              name="brand" // Changed to match the field name
               component="div"
               className="text-red-600"
             />
