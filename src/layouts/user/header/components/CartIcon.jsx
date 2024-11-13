@@ -3,8 +3,8 @@ import { FiShoppingCart } from "react-icons/fi";
 
 export default function CartIcon() {
   return (
-    <div>
-      <FiShoppingCart size={30} color="white" />
+    <div className="cursor-pointer">
+      <FiShoppingCart color="white" className="text-[1.5rem]" />
     </div>
   );
 }

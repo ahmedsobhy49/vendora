@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AppLogo from "../../../common/AppLogo";
 import AppContainer from "../../../common/AppContainer";
 import {
@@ -7,13 +7,39 @@ import {
   FaRegBuilding,
   FaCheck,
 } from "react-icons/fa";
-
 import { MdOutlineBusinessCenter } from "react-icons/md";
 import { Stepper, Step, Button } from "@material-tailwind/react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage, useFormikContext } from "formik";
 import * as Yup from "yup";
 import api from "../../../api/api";
 import { RotatingLines } from "react-loader-spinner";
+import { BsPatchCheck } from "react-icons/bs";
+
+const initialSellerInfo = {
+  first_name: "",
+  last_name: "",
+  email: "",
+  image: null,
+  phone_number: "",
+  password: "",
+  confirm_password: "",
+};
+
+const initialAddressInfo = {
+  building: "",
+  street: "",
+  city: "",
+  state: "",
+  zip: "",
+  country: "",
+};
+
+const initialBusinessInfo = {
+  company_name: "",
+  registration_number: "",
+  tax_id: "",
+};
+
 // Validation Schemas
 const sellerInfoSchema = Yup.object({
   first_name: Yup.string().required("First name is required"),
@@ -25,19 +51,15 @@ const sellerInfoSchema = Yup.object({
     .oneOf([Yup.ref("password"), null], "Passwords must match")
     .required("Confirm your password"),
   image: Yup.mixed()
-    .required("Image is required") // Ensure an image is uploaded
-    .test(
-      "fileSize",
-      "File size is too large, must be 2MB or less",
-      (value) => {
-        return value && value.size <= 2 * 1024 * 1024; // 2MB limit
-      }
+    .required("Click to upload your image")
+    .test("fileSize", "File size is too large, must be 2MB or less", (value) =>
+      value ? value.size <= 2 * 1024 * 1024 : true
     )
-    .test("fileType", "Unsupported file format", (value) => {
-      return (
-        value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
-      ); // Allow specific file types
-    }),
+    .test("fileType", "Unsupported file format", (value) =>
+      value
+        ? ["image/jpeg", "image/png", "image/gif"].includes(value.type)
+        : true
+    ),
 });
 
 const addressInfoSchema = Yup.object({
@@ -55,87 +77,52 @@ const businessInfoSchema = Yup.object({
   tax_id: Yup.string().required("Tax ID is required"),
 });
 
-const formikSchemas = [sellerInfoSchema, addressInfoSchema, businessInfoSchema];
+const formSteps = [
+  { initialValues: initialSellerInfo, validationSchema: sellerInfoSchema },
+  { initialValues: initialAddressInfo, validationSchema: addressInfoSchema },
+  { initialValues: initialBusinessInfo, validationSchema: businessInfoSchema },
+];
 
 export default function SellerRegister() {
-  const [activeStep, setActiveStep] = useState(0);
-  const [isLastStep, setIsLastStep] = useState(false);
-  const [isFirstStep, setIsFirstStep] = useState(true);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
-
-  const handleStepClick = (step, validateForm) => {
-    validateForm().then((errors) => {
-      if (Object.keys(errors).length === 0) {
-        setActiveStep(step);
-        setIsFirstStep(step === 0);
-        setIsLastStep(step === formikSchemas.length - 1);
-      }
-    });
-  };
-
-  const handleNext = (validateForm) => {
-    validateForm().then((errors) => {
-      if (Object.keys(errors).length === 0 && !isLastStep) {
-        setActiveStep((cur) => cur + 1);
-        setIsFirstStep(false);
-        setIsLastStep(activeStep + 1 === formikSchemas.length - 1);
-      }
-    });
-  };
-
-  const handlePrev = () => {
-    if (!isFirstStep) {
-      setActiveStep((cur) => cur - 1);
-      setIsFirstStep(activeStep - 1 === 0);
-      setIsLastStep(false);
-    }
-  };
 
   return (
     <AppContainer>
-      <div className="w-full">
-        <div className="flex flex-col justify-center items-center gap-4 mb-12">
+      <div className="w-full p-10 pb-20">
+        <div className="flex flex-col justify-center items-center gap-4 ">
           <div>
             <AppLogo width="100%" />
           </div>
-          <h4 className="text-gray-800 font-semibold text-xl">
-            Start Your Selling Journey, Register Now!
-          </h4>
+          {!registrationSuccess && (
+            <h4 className="text-gray-800 font-semibold text-xl">
+              Start Your Selling Journey, Register Now!
+            </h4>
+          )}
         </div>
-        <LoginStepper
-          registrationSuccess={registrationSuccess}
-          activeStep={activeStep}
-          onStepClick={(step, validateForm) =>
-            handleStepClick(step, validateForm)
-          }
-        />
         <FormikStepper
-          activeStep={activeStep}
-          handleNext={handleNext}
-          handlePrev={handlePrev}
-          isLastStep={isLastStep}
-          validationSchema={formikSchemas[activeStep]}
-          setRegistrationSuccess={setRegistrationSuccess}
           registrationSuccess={registrationSuccess}
+          setRegistrationSuccess={setRegistrationSuccess}
         />
       </div>
     </AppContainer>
   );
 }
 
-function LoginStepper({ activeStep, onStepClick, registrationSuccess }) {
+function UiStepper({
+  activeStep,
+  handleUiStepClick,
+  registrationSuccess,
+  validateForm,
+}) {
   const defaultIcons = [FaRegUser, FaRegBuilding, MdOutlineBusinessCenter];
-  const successIcons = [FaCheck, FaCheck, FaCheck]; // Change these to the desired icons for success
-
-  // Choose icons based on registration success
+  const successIcons = [FaCheck, FaCheck, FaCheck];
   const iconsToDisplay = registrationSuccess ? successIcons : defaultIcons;
-
   return (
-    <div className="w-full py-10 px-8">
-      <Stepper activeStep={activeStep}>
+    <div className={`w-full py-6 px-8`}>
+      <Stepper activeStep={activeStep} color="">
         {iconsToDisplay.map((Icon, idx) => (
-          <Step key={idx} onClick={() => onStepClick(idx)}>
-            <Icon className="h-5 w-5" />
+          <Step key={idx} onClick={() => handleUiStepClick(idx, validateForm)}>
+            <Icon className={`h-5 w-5`} />
           </Step>
         ))}
       </Stepper>
@@ -143,39 +130,44 @@ function LoginStepper({ activeStep, onStepClick, registrationSuccess }) {
   );
 }
 
-function FormikStepper({
-  activeStep,
-  handleNext,
-  handlePrev,
-  isLastStep,
-  validationSchema,
-  registrationSuccess,
-  setRegistrationSuccess,
-}) {
-  const [loading, setLoading] = useState(false); // Loading state
+function FormikStepper({ registrationSuccess, setRegistrationSuccess }) {
+  const [activeStep, setActiveStep] = useState(0);
+  const [isLastStep, setIsLastStep] = useState(false);
+  const handleUiStepClick = async (step, validateForm) => {
+    // const errors = await validateForm();
+    // if (Object.keys(errors).length === 0) {
+    //   setActiveStep(() => step);
+    //   setIsLastStep(step === formSteps.length - 1);
+    // }
+  };
+
+  const handleNext = async (validateForm, setErrors) => {
+    const errors = await validateForm();
+    console.log("errors", errors);
+    console.log(activeStep);
+    if (Object.keys(errors).length === 0 && !isLastStep) {
+      setActiveStep((cur) => cur + 1);
+      setIsLastStep(activeStep + 1 === formSteps.length - 1);
+    } else {
+      setErrors(errors);
+    }
+  };
+
+  const handlePrev = () => {
+    if (activeStep > 0) {
+      setActiveStep((cur) => cur - 1);
+      setIsLastStep(false);
+    }
+  };
+  const { initialValues, validationSchema } = formSteps[activeStep];
+  const [loading, setLoading] = useState(false);
 
   return (
     <Formik
-      initialValues={{
-        first_name: "",
-        last_name: "",
-        email: "",
-        image: null,
-        phone_number: "",
-        password: "",
-        confirm_password: "",
-        building: "",
-        street: "",
-        city: "",
-        state: "",
-        zip: "",
-        country: "",
-        company_name: "",
-        registration_number: "",
-        tax_id: "",
-      }}
+      initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
+        console.log("onSubmit");
         if (isLastStep) {
           const formData = new FormData();
           formData.append("firstName", values.first_name);
@@ -183,11 +175,7 @@ function FormikStepper({
           formData.append("email", values.email);
           formData.append("phone", values.phone_number);
           formData.append("password", values.password);
-
-          // Append the image file to FormData
-          if (values.image) formData.append("image", values.image);
-
-          // Address and business information
+          formData.append("image", values.image);
           formData.append("address[buildingNumber]", values.building);
           formData.append("address[street]", values.street);
           formData.append("address[city]", values.city);
@@ -203,12 +191,7 @@ function FormikStepper({
 
           setLoading(true);
           try {
-            const res = await api.post("sellers/register", formData, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            });
-            console.log(res);
+            const res = await api.post("sellers/register", formData);
             setRegistrationSuccess(true);
             resetForm();
           } catch (error) {
@@ -219,27 +202,34 @@ function FormikStepper({
         }
       }}
     >
-      {({ validateForm, setFieldValue }) => (
+      {({ validateForm, setErrors }) => (
         <Form>
-          {registrationSuccess ? (
-            <SuccessMessage />
-          ) : (
+          <UiStepper
+            activeStep={activeStep}
+            handleUiStepClick={handleUiStepClick}
+            registrationSuccess={registrationSuccess}
+            validateForm={validateForm} // Pass validateForm as a prop
+          />
+          {!registrationSuccess && (
             <>
-              {activeStep === 0 && <SellerInfo setFieldValue={setFieldValue} />}
-              {activeStep === 1 && (
-                <AddressInfo setFieldValue={setFieldValue} />
-              )}
-              {activeStep === 2 && (
-                <BusinessInfo setFieldValue={setFieldValue} />
-              )}
-              <div className="mt-16 flex justify-between">
-                <Button onClick={handlePrev} disabled={activeStep === 0}>
+              {activeStep === 0 && <SellerInfo />}
+              {activeStep === 1 && <AddressInfo />}
+              {activeStep === 2 && <BusinessInfo />}
+
+              <div className="mt-8 flex justify-between">
+                <Button
+                  onClick={handlePrev}
+                  disabled={activeStep === 0}
+                  className="bg-yellow-700 py-2 px-4 text-white font-bold  rounded-md hover:bg-yellow-600 text-lg capitalize "
+                >
                   Prev
                 </Button>
                 <Button
-                  onClick={() => handleNext(validateForm)}
-                  type={isLastStep ? "submit" : "button"}
-                  disabled={loading} // Disable the button if loading
+                  className="bg-yellow-700 py-2 px-4 text-white font-bold  rounded-md hover:bg-yellow-600 text-lg capitalize"
+                  type="submit"
+                  onClick={() => handleNext(validateForm, setErrors)}
+                  // type={isLastStep ? "submit" : "button"}
+                  disabled={loading}
                 >
                   {loading ? (
                     <RotatingLines strokeColor="white" width="14px" />
@@ -252,13 +242,15 @@ function FormikStepper({
               </div>
             </>
           )}
+          {registrationSuccess && <SuccessMessage />}
         </Form>
       )}
     </Formik>
   );
 }
 
-function SellerInfo({ setFieldValue }) {
+function SellerInfo() {
+  const { setFieldValue } = useFormikContext(); // Access Formik context here
   const [imagePreview, setImagePreview] = useState(null); // State to hold the image preview
 
   const handleImageChange = (event) => {
@@ -278,26 +270,33 @@ function SellerInfo({ setFieldValue }) {
   return (
     <div>
       <div className="flex flex-wrap items-center justify-center gap-3 mb-6 sm:gap-5 cursor-pointer">
-        <div
-          className="p-8 border-2 rounded-full border-dashed relative"
-          onClick={() => document.getElementById("fileInput").click()}
-        >
-          {imagePreview ? ( // Show image preview if available
-            <img
-              src={imagePreview}
-              alt="Profile Preview"
-              className="w-20 aspect-square rounded-full object-cover"
+        <div className="flex flex-col items-center gap-2">
+          <div
+            className="p-2 border-2 rounded-full border-dashed relative"
+            onClick={() => document.getElementById("fileInput").click()}
+          >
+            {imagePreview ? ( // Show image preview if available
+              <img
+                src={imagePreview}
+                alt="Profile Preview"
+                className="w-40 aspect-square rounded-full object-cover"
+              />
+            ) : (
+              <FaRegUserCircle size={120} color="#9ca3af" />
+            )}
+            <input
+              type="file"
+              id="fileInput"
+              className="hidden"
+              name="image"
+              accept="image/*" // Only allow image files
+              onChange={handleImageChange} // Handle file input change
             />
-          ) : (
-            <FaRegUserCircle size={50} color="#9ca3af" />
-          )}
-          <input
-            type="file"
-            id="fileInput"
-            className="hidden"
-            name="image"
-            accept="image/*" // Only allow image files
-            onChange={handleImageChange} // Handle file input change
+          </div>
+          <ErrorMessage
+            name={"image"}
+            component="div"
+            className="text-red-500 text-sm"
           />
         </div>
       </div>
@@ -311,14 +310,14 @@ function SellerInfo({ setFieldValue }) {
           "password",
           "confirm_password",
         ].map((field, idx) => (
-          <div key={idx}>
-            <label htmlFor={field} className="text-gray-800 text-sm mb-2 block">
+          <div key={idx} className="flex flex-col gap-2">
+            <label htmlFor={field} className="text-gray-800 text-sm  block">
               {field.replace("_", " ").replace(/^\w/, (c) => c.toUpperCase())}
             </label>
             <Field
               name={field}
               type={field.includes("password") ? "password" : "text"}
-              className="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all"
+              className="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all "
               placeholder={`Enter ${field.replace("_", " ")}`}
             />
             <ErrorMessage
@@ -338,7 +337,7 @@ function AddressInfo() {
     <div className="grid grid-cols-2 gap-6">
       {["building", "street", "city", "state", "zip", "country"].map(
         (field, idx) => (
-          <div key={idx}>
+          <div key={idx} className="flex flex-col gap-2">
             <label htmlFor={field} className="text-gray-800 text-sm mb-2 block">
               {field.replace("_", " ").replace(/^\w/, (c) => c.toUpperCase())}
             </label>
@@ -364,7 +363,7 @@ function BusinessInfo() {
   return (
     <div className="flex flex-col gap-6">
       {["company_name", "registration_number", "tax_id"].map((field, idx) => (
-        <div key={idx}>
+        <div key={idx} className="flex flex-col gap-2">
           <label htmlFor={field} className="text-gray-800 text-sm mb-2 block">
             {field.replace("_", " ").replace(/^\w/, (c) => c.toUpperCase())}
           </label>
@@ -388,11 +387,12 @@ function BusinessInfo() {
 function SuccessMessage() {
   return (
     <div className="flex flex-col items-center justify-center text-center">
-      <div className="max-w-lg w-full bg-white rounded-lg shadow-lg p-6">
-        <h1 className="text-2xl font-bold text-center text-green-600 mb-4">
-          Registration Successful!
+      <div className=" w-full lg:w-8/12 bg-white rounded-lg shadow-lg p-12 flex flex-col items-center gap-4">
+        <BsPatchCheck size={150} color="#43a047" />
+        <h1 className="text-2xl font-bold text-center text-green-600 ">
+          Success
         </h1>
-        <p className="text-gray-700 text-base mb-4">
+        <p className="text-gray-600 text-lg font-semibold">
           Thank you for registering as a seller on our platform! Your account is
           currently under review, and you will receive an email notification
           once it is approved.

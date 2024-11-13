@@ -129,6 +129,9 @@ export default function Statistics({ yearOrdersStatistics }) {
               },
             },
             xaxis: {
+              min: 0,
+              max: 25, // Fixed maximum value of 100
+              tickAmount: 5, // 5 ticks (0, 20, 40, 60, 80, 100)
               labels: {
                 style: { fontSize: "11px" },
               },

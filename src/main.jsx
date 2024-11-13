@@ -39,6 +39,7 @@ import { RouterProvider } from "react-router-dom";
 import "./index.css";
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 // Toast
 import { ToastContainer } from "react-toastify";

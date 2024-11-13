@@ -59,7 +59,7 @@ export default function Login() {
   }
 
   return (
-    <div className="w-10/12 sm:w-2/3 md:w-1/2 lg:w-1/3 xl:w-1/4 mx-auto bg-slate-50 shadow-lg p-10">
+    <div className="w-10/12 sm:w-2/3 md:w-1/2 lg:w-1/3 xl:w-1/4 mx-auto bg-slate-50 shadow-lg p-10 mt-40">
       <AppLogo
         width="30%"
         className="mx-auto mb-8 bg-slate-100 flex items-center justify-center rounded-full py-2"
@@ -97,7 +97,10 @@ export default function Login() {
               touched={formik.touched.password}
             />
           </div>
-          <Button type="submit">
+          <Button
+            type="submit"
+            className="bg-yellow-700 py-2 px-4 text-white font-bold  rounded-md hover:bg-yellow-600 text-lg capitalize w-full"
+          >
             {isLoading ? (
               <Loading
                 type="spin"

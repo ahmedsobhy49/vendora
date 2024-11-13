@@ -6,7 +6,6 @@ import { GrView } from "react-icons/gr";
 import Pagination from "../../../../../common/Pagination";
 import TablesSelectDropdown from "../../../../../common/TablesSelectDropdown";
 import { Link } from "react-router-dom";
-import api from "../../../../../api/api";
 import createStatusClasses from "../../../../../utils/createStatusClasses";
 import getInactiveSellers from "../../../../../services/seller/getInactiveSellers";
 
@@ -85,7 +84,7 @@ function DesktopTable({
   sellersDataState,
 }) {
   return (
-    <div className="overflow-auto bg-white rounded-lg">
+    <div className="overflow-auto bg-white rounded-lg min-h-[55rem]">
       <table className="hidden md:table min-w-full table-auto">
         <thead>
           <tr className="border-b-2">
@@ -175,7 +174,7 @@ function DesktopTable({
                   <p className="text-center p-12 text-gray-500 text-lg">
                     {searchQuery
                       ? "No results found"
-                      : "No Inactive sellers found"}
+                      : "No Inactive sellers currently"}
                   </p>
                 </div>
               </td>

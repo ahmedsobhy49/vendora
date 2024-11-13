@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import DashboardContainer from "../../../../../common/DashboardContainer";
 import { FaUserTie } from "react-icons/fa6";
@@ -8,7 +8,11 @@ import { useFormik } from "formik";
 import { FaCheck } from "react-icons/fa";
 import * as Yup from "yup";
 import api from "../../../../../api/api";
+import ConfirmDeleteModal from "../../../../../common/ConfirmDeleteModal";
+import deleteSellerById from "../../../../../services/seller/deleteSellerById";
+import { toast } from "react-toastify";
 export default function SellerDetails() {
+  const navigate = useNavigate();
   const seller = useLocation().state;
   console.log(seller);
   function createStatusClasses(state) {
@@ -26,10 +30,10 @@ export default function SellerDetails() {
 
   return (
     <DashboardContainer>
-      <div className="custom-hight lg:flex lg:justify-center lg:items-center">
+      <div className="custom-hight lg:flex lg:justify-center lg:items-center ">
         <div>
           <div className="grid gird-cols-1 xl:grid-cols-7 gap-4 sm:w-2/3 mx-auto md:w-full">
-            <div className="col-span-1">
+            <div className="xl:col-span-1">
               <SellerImage image={seller?.image} />
             </div>
             <div className="xl:col-span-3">
@@ -42,7 +46,7 @@ export default function SellerDetails() {
                 createStatusClasses={createStatusClasses}
               />
             </div>
-            <div className="xl:col-span-3 r">
+            <div className="xl:col-span-3">
               <ShopInfoCard
                 shopName={seller?.businessInfo?.companyName}
                 street={seller?.address?.street}
@@ -53,8 +57,11 @@ export default function SellerDetails() {
                 taxId={seller?.businessInfo?.taxId}
               />
             </div>
+            <div className="xl:col-span-6 xl:col-start-2 flex items-end justify-between gap-2">
+              <SellerStatusAction seller={seller} navigate={navigate} />
+              <DeleteSeller seller={seller} navigate={navigate} />
+            </div>
           </div>
-          <SellerStatusAction seller={seller} />
         </div>
       </div>
     </DashboardContainer>
@@ -230,9 +237,7 @@ function ShopInfoCard({
   );
 }
 
-function SellerStatusAction({ seller }) {
-  const navigate = useNavigate();
-
+function SellerStatusAction({ seller, navigate }) {
   const formik = useFormik({
     initialValues: {
       status: "",
@@ -251,6 +256,7 @@ function SellerStatusAction({ seller }) {
             headers: { "Content-Type": "application/json" },
           }
         );
+        toast.success(`Seller status updated to ${values?.status}`);
 
         formik.resetForm();
         if (values.status === "active") {
@@ -288,7 +294,7 @@ function SellerStatusAction({ seller }) {
           id="status"
           name="status"
           options={statusOptions}
-          className="basic-single-select capitalize"
+          className="basic-single-select "
           classNamePrefix="select"
           placeholder="Select a status"
           value={statusOptions.find(
@@ -307,10 +313,41 @@ function SellerStatusAction({ seller }) {
       </div>
       <button
         type="submit"
-        className="flex justify-end text-white p-3 bg-green-400"
+        className="flex justify-end text-white p-[0.93rem] bg-green-400"
       >
         <FaCheck />
       </button>
     </form>
+  );
+}
+
+function DeleteSeller({ seller, navigate }) {
+  const handleDelete = async () => {
+    await deleteSellerById(seller?._id);
+
+    if (seller?.status?.toLowerCase() === "pending") {
+      navigate("/admin/dashboard/sellers-request");
+    } else if (seller?.status?.toLowerCase() === "active") {
+      navigate("/admin/dashboard/sellers");
+    } else if (seller?.status?.toLowerCase() === "inactive") {
+      navigate("/admin/dashboard/deactive-seller");
+    }
+  };
+
+  const showConfirmDeleteModal = async () => {
+    await ConfirmDeleteModal({
+      whatIsDeleted: "Seller",
+      handleDelete,
+    });
+  };
+
+  return (
+    <button
+      onClick={() => showConfirmDeleteModal()}
+      type="button"
+      className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-[1rem] lg:text-lg px-5 py-2.5 "
+    >
+      Delete this seller
+    </button>
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-
+import AppContainer from "../common/AppContainer";
 export default function Home() {
-  return <div>Home</div>;
+  return <div className="">Home</div>;
 }

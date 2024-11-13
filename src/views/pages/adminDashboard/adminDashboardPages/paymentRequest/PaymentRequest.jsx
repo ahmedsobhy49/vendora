@@ -159,7 +159,7 @@ function DisktopTable({
   paymentsDataState,
 }) {
   return (
-    <div className="overflow-auto bg-white rounded-lg">
+    <div className="overflow-auto bg-white rounded-lg min-h-[55rem]">
       <table className="hidden md:table min-w-full table-auto ">
         <thead>
           <tr>

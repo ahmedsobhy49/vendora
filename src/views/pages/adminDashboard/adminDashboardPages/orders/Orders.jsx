@@ -83,7 +83,7 @@ function DisktopTable({
   ordersDataState,
 }) {
   return (
-    <div className="overflow-auto bg-white rounded-lg">
+    <div className="overflow-auto bg-white rounded-lg min-h-[55rem]">
       <table className="hidden md:table min-w-full table-auto">
         <thead>
           <tr className="border-b-4">
@@ -163,10 +163,10 @@ function DisktopTable({
             ))
           ) : (
             <tr>
-              <td colSpan={7}>
+              <td colSpan={8}>
                 <div className="flex justify-center">
                   <p className="text-center p-12 text-gray-500 text-lg">
-                    No orders found
+                    No orders currently
                   </p>
                 </div>
               </td>

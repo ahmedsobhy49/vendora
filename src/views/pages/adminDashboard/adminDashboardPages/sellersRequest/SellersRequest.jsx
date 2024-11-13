@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import createStatusClasses from "../../../../../utils/createStatusClasses";
 import getSellersRequest from "../../../../../services/seller/getSellersRequest";
+import { useQuery } from "react-query";
 
 export default function SellersRequest() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,13 +24,17 @@ export default function SellersRequest() {
       ? entriesNum * (currentPage - 1) + entriesNum
       : allEntriesNum;
 
-  useEffect(() => {
-    const fetchSellersRequest = async () => {
-      const sellers = await getSellersRequest();
-      setSellersRequestDataState(sellers);
-    };
-    fetchSellersRequest();
-  }, []);
+  const { data: sellersRequest } = useQuery(
+    "sellers-request",
+    getSellersRequest,
+    {
+      onSuccess: (fetchedData) => {
+        setSellersRequestDataState(fetchedData);
+      },
+    }
+  );
+
+  console.log(sellersRequest?.data);
 
   return (
     <DashboardContainer>
@@ -81,7 +86,7 @@ function DesktopTable({
   searchQuery,
 }) {
   return (
-    <div className="overflow-auto bg-white rounded-lg">
+    <div className="overflow-auto bg-white rounded-lg min-h-[55rem]">
       <table className="hidden md:table min-w-full table-auto">
         <thead>
           <tr className="border-b-2">
@@ -173,7 +178,7 @@ function DesktopTable({
                   <p className="text-center p-12 text-gray-500 text-lg">
                     {searchQuery
                       ? "No matched data"
-                      : "No seller Requests found"}
+                      : "No sellers request currently"}
                   </p>
                 </div>
               </td>

@@ -3,8 +3,8 @@ import { RxHamburgerMenu } from "react-icons/rx";
 
 export default function BurgerIcon() {
   return (
-    <div>
-      <RxHamburgerMenu size={30} color="white" />
+    <div className="lg:hidden w-full  ">
+      <RxHamburgerMenu className="text-[2rem] sm:text-[3rem]" color="white" />
     </div>
   );
 }

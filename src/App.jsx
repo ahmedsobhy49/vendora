@@ -30,6 +30,7 @@
 import { RouterProvider } from "react-router-dom";
 import router from "./router/index.routes";
 import { useEffect } from "react";
+import DashboardContainer from "./common/DashboardContainer";
 
 export default function App() {
   useEffect(() => {
