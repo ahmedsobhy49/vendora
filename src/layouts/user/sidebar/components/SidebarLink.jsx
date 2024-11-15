@@ -1,5 +1,12 @@
 import React from "react";
 
-export default function SidebarLink({ children }) {
-  return <li className="flex items-center gap-3">{children}</li>;
+export default function SidebarLink({ children, onClick }) {
+  return (
+    <li
+      className="flex items-center justify-between pe-4 py-6 "
+      onClick={onClick}
+    >
+      {children}
+    </li>
+  );
 }

@@ -88,3 +88,14 @@ th:not(:last-child) {
   width: 100% !important;
   padding: 0 !important;
 }
+
+.responsive-brand-img-scale {
+  transform: scale(2.5);
+}
+
+@media (min-width: 1140px) {
+  /* for responsive brand image */
+  .responsive-brand-img-scale {
+    transform: scale(2);
+  }
+}

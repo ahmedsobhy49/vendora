@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function MegaMenu({ subCategoriesState, topBrands }) {
   return (
     <div className=" flex flex-col justify-between px-10 shadow-sm bg-white">
-      <ul className="grid grid-cols-5 xl:grid-cols-6 gap-12  min-h-[30rem] max-h-[30rem] overflow-y-auto  py-6">
+      <ul className="grid grid-cols-5 xl:grid-cols-6 gap-12  min-h-[30rem] max-h-[30rem] overflow-y-auto  hide-scrollbar py-6">
         {subCategoriesState?.map((subCategory) => {
           return (
             <li key={subCategory._id} className="">
@@ -34,18 +34,17 @@ export default function MegaMenu({ subCategoriesState, topBrands }) {
           );
         })}
       </ul>
-      <div className="pb-10">
+      <div className="py-10">
         <h3 className="text-2xl mb-4">Top Brands</h3>
-        <ul className="flex items-center gap-6 overflow-y-auto hide-scrollbar">
+        <ul className="flex items-start gap-6 overflow-y-auto hide-scrollbar">
           {topBrands?.map((brand) => (
             <li
               key={brand._id}
               className="flex flex-col gap-6 justify-center items-center cursor-pointer"
             >
-              <div className="w-32 h-32 px-10 bg-gray-100 flex justify-center items-center">
+              <div className="w-28 xl:w-32 aspect-square px-10 bg-gray-100 flex justify-center items-center">
                 <img
-                  className="w-full h-auto"
-                  style={{ scale: "2.2" }}
+                  className="w-full h-auto responsive-brand-img-scale"
                   src={`http://localhost:8000${brand?.logo}`}
                   alt={brand?.name}
                 />

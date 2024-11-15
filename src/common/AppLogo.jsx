@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function AppLogo({ width = "15%", className = "" }) {
+export default function AppLogo({ width, className = "" }) {
   return (
     <Link to={"/"}>
       <div

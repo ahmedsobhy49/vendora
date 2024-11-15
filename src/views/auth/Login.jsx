@@ -9,8 +9,7 @@ import { useMutation } from "react-query";
 import { authService } from "../../services/auth/auth";
 import Message from "../../common/Message";
 import Loading from "react-loading";
-import { useNavigate } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 export default function Login() {
   const navigate = useNavigate();
   const [loginRequestMessage, setLoginRequestMessage] = useState({
@@ -59,15 +58,16 @@ export default function Login() {
   }
 
   return (
-    <div className="w-10/12 sm:w-2/3 md:w-1/2 lg:w-1/3 xl:w-1/4 mx-auto bg-slate-50 shadow-lg p-10 mt-40">
+    <div className="w-11/12 sm:w-8/12 md:w-7/12 lg:w-6/12 xl:w-5/12 2xl:w-4/12 mx-auto bg-slate-50 shadow-lg p-10 mt-40">
       <AppLogo
         width="30%"
-        className="mx-auto mb-8 bg-slate-100 flex items-center justify-center rounded-full py-2"
+        className="mx-auto mb-8 bg-slate-100 flex items-center justify-center rounded-full py-2 "
       />
+
       <h3 className="text-xl font-bold mb-6 text-center">Sign In</h3>
       <form onSubmit={formik.handleSubmit}>
         <div className="flex flex-col justify-center gap-5 w-full mx-auto">
-          <div className="flex flex-col items-start gap-1 w-full">
+          <div className="flex flex-col items-start gap-2 w-full">
             <Input
               name="email"
               type="email"
@@ -82,7 +82,7 @@ export default function Login() {
               touched={formik.touched.email}
             />
           </div>
-          <div className="flex flex-col items-start gap-1 w-full">
+          <div className="flex flex-col items-start gap-2 w-full">
             <Input
               name="password"
               type="password"
@@ -118,6 +118,15 @@ export default function Login() {
           />
         </div>
       </form>
+      <p className="text-sm font-light text-gray-500 mt-4 flex items-center gap-1">
+        Don’t have an account yet?
+        <Link
+          to={"/user/register"}
+          className="font-medium text-primary-600 underline"
+        >
+          Sign up
+        </Link>
+      </p>
     </div>
   );
 }

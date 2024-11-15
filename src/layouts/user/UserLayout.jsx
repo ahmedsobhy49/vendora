@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Header from "./header/Header";
 import SecondaryHeader from "./secondaryHeader/SecondaryHeader";
 import AppConrainer from "../../common/AppContainer";
@@ -8,15 +8,17 @@ import getAllParentCategories from "../../services/category/getAllParentCategori
 import { useQuery } from "react-query";
 import getSubCategoriesByParentId from "../../services/category/getSubCategoriesByParentId";
 import getBrandByCategoryId from "../../services/brands/getBrandsByCategoryId";
+import Sidebar from "./sidebar/Sidebar";
 
 export default function UserLayout() {
+  const loction = useLocation();
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [parentCategoriesState, setParentCategoriesState] = useState([]);
   const [subCategoriesState, setSubCategoriesState] = useState([]);
   const [selectedParentId, setSelectedParentId] = useState(null);
   const [topBrands, setTopBrands] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  console.log(topBrands);
   useQuery(["parentCategories"], getAllParentCategories, {
     onSuccess: (fetchedData) => {
       setParentCategoriesState(fetchedData.data.categories);
@@ -39,19 +41,6 @@ export default function UserLayout() {
     }
   );
 
-  function handleMouseEnter(event) {
-    const parentId = event.currentTarget.dataset.id;
-    if (parentId !== selectedParentId) {
-      setSelectedParentId(() => parentId);
-      setIsMegaMenuOpen(true);
-    }
-  }
-
-  function handleMouseLeave() {
-    setIsMegaMenuOpen(false);
-    setSelectedParentId(null);
-  }
-
   // Fetch subcategories by parent ID when selectedParentId changes
   useQuery(
     ["subCategories", selectedParentId],
@@ -63,9 +52,46 @@ export default function UserLayout() {
       },
     }
   );
+
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [location.pathname]);
+
+  function handleMouseEnter(event) {
+    const parentId = event.currentTarget.dataset.id;
+    if (parentId !== selectedParentId) {
+      setSelectedParentId(() => parentId);
+      setIsMegaMenuOpen(true);
+      setIsSidebarOpen(false); // Close sidebar when opening mega menu
+    }
+  }
+
+  function handleMouseLeave() {
+    setIsMegaMenuOpen(false);
+    setSelectedParentId(null);
+  }
+
+  function handleSidebarVisibilityChange(e) {
+    if (e.currentTarget.dataset.type === "close") {
+      setIsSidebarOpen(false);
+    } else if (e.currentTarget.dataset.type === "open") {
+      setIsSidebarOpen(true);
+      setIsMegaMenuOpen(false);
+      setSelectedParentId(null);
+    }
+  }
+
   return (
     <>
-      <Header />
+      <Header handleSidebarVisibilityChange={handleSidebarVisibilityChange} />
+      <Sidebar
+        isSidebarOpen={isSidebarOpen}
+        parentCategoriesState={parentCategoriesState}
+        subCategoriesState={subCategoriesState}
+        setSubCategoriesState={setSubCategoriesState}
+        setSelectedParentId={setSelectedParentId}
+        selectedParentId={selectedParentId}
+      />
       <div
         onMouseLeave={handleMouseLeave}
         className="absolute left-0 right-0 z-20 hidden lg:block"
@@ -88,7 +114,15 @@ export default function UserLayout() {
       </AppConrainer>
 
       {isMegaMenuOpen && (
-        <div className="fixed top-64 right-0 bottom-0 left-0 bg-black opacity-30 z-10"></div>
+        <div className="fixed top-64 right-0 bottom-0 left-0 bg-black opacity-30 z-10 hidden lg:block"></div>
+      )}
+
+      {isSidebarOpen && (
+        <div
+          className="fixed top-0 right-0 left-0 bottom-0  bg-black opacity-30 z-1 lg:hidden"
+          data-type="close"
+          onClick={(e) => handleSidebarVisibilityChange(e)}
+        ></div>
       )}
     </>
   );

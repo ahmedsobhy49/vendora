@@ -21,9 +21,7 @@ export default function SidebarMenu({ setShowSideBar }) {
       <ul className="flex flex-col gap-5 flex-grow">
         {sellerNavigation.map((nav) => (
           <SidebarLink key={nav.id} to={nav.path} label={nav.label}>
-            <span className="text-[1.2rem] md:text-xl xl:text-2xl 2xl:text-3xl">
-              {nav.icon}
-            </span>
+            <span className="text-[2rem]">{nav.icon}</span>
           </SidebarLink>
         ))}
       </ul>
