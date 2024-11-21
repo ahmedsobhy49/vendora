@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import createStatusClasses from "../../../../../utils/createStatusClasses";
 import getActiveSeller from "../../../../../services/seller/getActiveSellers";
 import formatName from "../../../../../utils/formatName";
+import { authService } from "../../../../../services/auth/auth";
 export default function Sellers() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sellersDataState, setSellersDataState] = useState([]);
@@ -77,6 +78,7 @@ function DisktopTable({
   showingTo,
   sellersDataState,
 }) {
+  const decodedToken = authService.decodeToken();
   return (
     <div className="overflow-auto bg-white rounded-lg  min-h-[55rem]">
       <table className="hidden md:table min-w-full table-auto">
@@ -153,7 +155,7 @@ function DisktopTable({
                   </td>
                   <td className="text-center px-4 py-1 flex justify-center space-x-2">
                     <Link
-                      to={`/admin/dashboard/sellers/${seller._id}`}
+                      to={`/admin/dashboard/${decodedToken.id}/sellers/${seller._id}`}
                       state={seller}
                       className="text-green-500 text-center py-7"
                     >

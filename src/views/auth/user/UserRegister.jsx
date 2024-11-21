@@ -85,112 +85,116 @@ export default function Register() {
   });
 
   return (
-    <div className="w-11/12 sm:w-8/12 md:w-7/12 lg:w-6/12 xl:w-5/12 2xl:w-4/12 mx-auto bg-slate-50 shadow-lg  p-8 mt-20">
-      <form onSubmit={formik.handleSubmit} className="w-full">
+    <div className="w-11/12 sm:w-10/12 xl:w-6/12 mx-auto shadow-lg p-8 mt-20 md:mt-48">
+      <div className="w-3/12 md:w-2/12  mx-auto">
         <AppLogo
-          width="30%"
+          width="100%"
           className="mx-auto mb-8 bg-slate-100 flex items-center justify-center rounded-full py-1"
         />
+      </div>
+      <form onSubmit={formik.handleSubmit} className="w-full">
         <h3 className="text-xl font-bold mb-6 text-center ">Sign Up</h3>
 
-        <div className="flex flex-col justify-center gap-5 w-full mx-auto">
-          <div className="flex flex-col items-start gap-1 w-full">
-            <Input
-              name={"fName"}
-              type={"text"}
-              label={"First Name"}
-              id={"r-f-name"}
-              value={formik.values.fName}
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-            />
-            <FieldError
-              errorMessage={formik.errors.fName}
-              touched={formik.touched.fName}
-            />
-          </div>
-          <div className="flex flex-col items-start gap-1 w-full">
-            <Input
-              name={"lName"}
-              type={"text"}
-              label={"Last Name"}
-              id={"r-l-name"}
-              value={formik.values.lName}
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-            />
-            <FieldError
-              errorMessage={formik.errors.lName}
-              touched={formik.touched.lName}
-            />
-          </div>
-          <div className="flex flex-col items-start gap-1 w-full">
-            <Input
-              name={"email"}
-              type={"email"}
-              id={"r-email"}
-              label={"Email"}
-              value={formik.values.email}
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-            />
-            <FieldError
-              errorMessage={formik.errors.email}
-              touched={formik.touched.email}
-            />
-          </div>
-
-          <div className="flex flex-col items-start gap-1 w-full">
-            <Input
-              name={"phone"}
-              type={"phone"}
-              id={"phone"}
-              label={"Phone Number"}
-              value={formik.values.phone}
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-            />
-            <FieldError
-              errorMessage={formik.errors.phone}
-              touched={formik.touched.phone}
-            />
-          </div>
-          <div className="flex flex-col items-start gap-1 w-full">
-            <Input
-              name={"password"}
-              type={"password"}
-              id={"r-password"}
-              label={"Password"}
-              value={formik.values.password}
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-            />
-            <FieldError
-              errorMessage={formik.errors.password}
-              touched={formik.touched.password}
-            />
-          </div>
-          <div className="flex flex-col items-start gap-1 w-full">
-            <Input
-              name={"confirmPassword"}
-              type={"password"}
-              id={"r-confirm-password"}
-              label={"Confirm Password"}
-              value={formik.values.confirmPassword}
-              onBlur={formik.handleBlur}
-              onChange={formik.handleChange}
-            />
-            {!formik.errors.password && (
-              <FieldError
-                errorMessage={formik.errors.confirmPassword}
-                touched={formik.touched.confirmPassword}
+        <div className=" w-full mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 justify-center gap-5">
+            <div className="flex flex-col items-start gap-1 w-full">
+              <Input
+                name={"fName"}
+                type={"text"}
+                label={"First Name"}
+                id={"r-f-name"}
+                value={formik.values.fName}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
               />
-            )}
+              <FieldError
+                errorMessage={formik.errors.fName}
+                touched={formik.touched.fName}
+              />
+            </div>
+            <div className="flex flex-col items-start gap-1 w-full">
+              <Input
+                name={"lName"}
+                type={"text"}
+                label={"Last Name"}
+                id={"r-l-name"}
+                value={formik.values.lName}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+              />
+              <FieldError
+                errorMessage={formik.errors.lName}
+                touched={formik.touched.lName}
+              />
+            </div>
+            <div className="flex flex-col items-start gap-1 w-full">
+              <Input
+                name={"email"}
+                type={"email"}
+                id={"r-email"}
+                label={"Email"}
+                value={formik.values.email}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+              />
+              <FieldError
+                errorMessage={formik.errors.email}
+                touched={formik.touched.email}
+              />
+            </div>
+
+            <div className="flex flex-col items-start gap-1 w-full">
+              <Input
+                name={"phone"}
+                type={"phone"}
+                id={"phone"}
+                label={"Phone Number"}
+                value={formik.values.phone}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+              />
+              <FieldError
+                errorMessage={formik.errors.phone}
+                touched={formik.touched.phone}
+              />
+            </div>
+            <div className="flex flex-col items-start gap-1 w-full">
+              <Input
+                name={"password"}
+                type={"password"}
+                id={"r-password"}
+                label={"Password"}
+                value={formik.values.password}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+              />
+              <FieldError
+                errorMessage={formik.errors.password}
+                touched={formik.touched.password}
+              />
+            </div>
+            <div className="flex flex-col items-start gap-1 w-full">
+              <Input
+                name={"confirmPassword"}
+                type={"password"}
+                id={"r-confirm-password"}
+                label={"Confirm Password"}
+                value={formik.values.confirmPassword}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+              />
+              {!formik.errors.password && (
+                <FieldError
+                  errorMessage={formik.errors.confirmPassword}
+                  touched={formik.touched.confirmPassword}
+                />
+              )}
+            </div>
           </div>
           {error && <p className="text-xs text-red-500 font-bold">{error}</p>}
           <Button
             type="submit"
-            className="bg-yellow-700 py-2 px-4 text-white font-bold  rounded-md hover:bg-yellow-600 text-lg capitalize w-full"
+            className="bg-yellow-700 py-2 px-4 text-white font-bold  rounded-md hover:bg-yellow-600 text-lg capitalize w-full mt-6"
           >
             {isLoading ? (
               <Loading

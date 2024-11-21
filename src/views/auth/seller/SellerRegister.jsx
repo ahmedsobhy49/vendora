@@ -88,7 +88,7 @@ export default function SellerRegister() {
 
   return (
     <AppContainer>
-      <div className="w-full p-10 pb-20">
+      <div className="w-full p-10 rounded-md  ">
         <div className="flex flex-col justify-center items-center gap-4 ">
           <div>
             <AppLogo width="100%" />
@@ -118,8 +118,8 @@ function UiStepper({
   const successIcons = [FaCheck, FaCheck, FaCheck];
   const iconsToDisplay = registrationSuccess ? successIcons : defaultIcons;
   return (
-    <div className={`w-full py-6 px-8`}>
-      <Stepper activeStep={activeStep} color="">
+    <div className={`w-full py-4 my-6 px-8 bg-white rounded-full `}>
+      <Stepper activeStep={activeStep}>
         {iconsToDisplay.map((Icon, idx) => (
           <Step key={idx} onClick={() => handleUiStepClick(idx, validateForm)}>
             <Icon className={`h-5 w-5`} />
@@ -133,13 +133,7 @@ function UiStepper({
 function FormikStepper({ registrationSuccess, setRegistrationSuccess }) {
   const [activeStep, setActiveStep] = useState(0);
   const [isLastStep, setIsLastStep] = useState(false);
-  const handleUiStepClick = async (step, validateForm) => {
-    // const errors = await validateForm();
-    // if (Object.keys(errors).length === 0) {
-    //   setActiveStep(() => step);
-    //   setIsLastStep(step === formSteps.length - 1);
-    // }
-  };
+  const handleUiStepClick = async (step, validateForm) => {};
 
   const handleNext = async (validateForm, setErrors) => {
     const errors = await validateForm();
@@ -203,7 +197,7 @@ function FormikStepper({ registrationSuccess, setRegistrationSuccess }) {
       }}
     >
       {({ validateForm, setErrors }) => (
-        <Form>
+        <Form className="">
           <UiStepper
             activeStep={activeStep}
             handleUiStepClick={handleUiStepClick}
@@ -272,7 +266,7 @@ function SellerInfo() {
       <div className="flex flex-wrap items-center justify-center gap-3 mb-6 sm:gap-5 cursor-pointer">
         <div className="flex flex-col items-center gap-2">
           <div
-            className="p-2 border-2 rounded-full border-dashed relative"
+            className="p-2 border-2 border-white rounded-full border-dashed relative"
             onClick={() => document.getElementById("fileInput").click()}
           >
             {imagePreview ? ( // Show image preview if available
@@ -282,7 +276,7 @@ function SellerInfo() {
                 className="w-40 aspect-square rounded-full object-cover"
               />
             ) : (
-              <FaRegUserCircle size={120} color="#9ca3af" />
+              <FaRegUserCircle size={120} color="white" />
             )}
             <input
               type="file"
@@ -317,7 +311,7 @@ function SellerInfo() {
             <Field
               name={field}
               type={field.includes("password") ? "password" : "text"}
-              className="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all "
+              className="bg-white w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all "
               placeholder={`Enter ${field.replace("_", " ")}`}
             />
             <ErrorMessage
@@ -344,7 +338,7 @@ function AddressInfo() {
             <Field
               name={field}
               type="text"
-              className="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all"
+              className="bg-white w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all"
               placeholder={`Enter ${field.replace("_", " ")}`}
             />
             <ErrorMessage
@@ -370,7 +364,7 @@ function BusinessInfo() {
           <Field
             name={field}
             type="text"
-            className="bg-gray-100 w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all"
+            className="bg-white w-full text-gray-800 text-sm px-4 py-3.5 rounded-md focus:bg-transparent outline-blue-500 transition-all"
             placeholder={`Enter ${field.replace("_", " ")}`}
           />
           <ErrorMessage

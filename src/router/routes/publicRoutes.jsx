@@ -3,7 +3,7 @@ import UserLayout from "../../layouts/user/UserLayout";
 import CustomSuspense from "../../common/CustomSuspense";
 const Login = lazy(() => import("../../views/auth/Login"));
 const Register = lazy(() => import("../../views/auth/user/UserRegister"));
-const Home = lazy(() => import("../../pages/Home"));
+const Home = lazy(() => import("../../pages/Home/Home"));
 const SellerRegister = lazy(() =>
   import("../../views/auth/seller/SellerRegister")
 );

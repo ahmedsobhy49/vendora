@@ -4,6 +4,11 @@ import api from "../../api/api";
 const TOKEN_KEY = "token";
 
 export const authService = {
+  // Save token to local storage
+  saveToken(token) {
+    localStorage.setItem(TOKEN_KEY, token);
+  },
+
   // Get token from local storage
   getToken() {
     return localStorage.getItem(TOKEN_KEY);
@@ -14,11 +19,6 @@ export const authService = {
     const token = authService.getToken();
     if (token) return jwtDecode(token);
     return null;
-  },
-
-  // Save token to local storage
-  saveToken(token) {
-    localStorage.setItem(TOKEN_KEY, token);
   },
 
   // Remove token from local storage
@@ -42,7 +42,7 @@ export const authService = {
       const { token } = response.data;
       authService.saveToken(token); // Save the token
       const decoded = authService.decodeToken(); // Decode the token
-      return decoded.role; // Return the user role
+      return { role: decoded.role, id: decoded.id }; // Return the user role
     } catch (error) {
       console.error("Login failed:", error);
       throw error;

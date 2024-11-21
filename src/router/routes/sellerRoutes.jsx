@@ -44,6 +44,8 @@ const Dashboard = lazy(() =>
   )
 );
 
+const rootPath = "/seller/dashboard/:sellerId";
+
 const sellerRoutes = [
   {
     element: (
@@ -55,7 +57,7 @@ const sellerRoutes = [
 
     children: [
       {
-        path: "/seller/dashboard",
+        path: `${rootPath}`,
         element: (
           <CustomSuspense>
             <Dashboard />
@@ -63,7 +65,7 @@ const sellerRoutes = [
         ),
       },
       {
-        path: "/seller/dashboard/add-product",
+        path: `${rootPath}/add-product`,
         element: (
           <CustomSuspense>
             <AddProductMainForm />
@@ -71,7 +73,7 @@ const sellerRoutes = [
         ),
       },
       {
-        path: "/seller/dashboard/all-products",
+        path: `${rootPath}/all-products`,
         element: (
           <CustomSuspense>
             <AllProducts />
@@ -79,7 +81,7 @@ const sellerRoutes = [
         ),
       },
       {
-        path: "/seller/dashboard/discount-products",
+        path: `${rootPath}/discount-products`,
         element: (
           <CustomSuspense>
             <DiscountProducts />
@@ -87,7 +89,7 @@ const sellerRoutes = [
         ),
       },
       {
-        path: "/seller/dashboard/orders",
+        path: `${rootPath}/orders`,
         element: (
           <CustomSuspense>
             <Orders />
@@ -95,7 +97,7 @@ const sellerRoutes = [
         ),
       },
       {
-        path: "/seller/dashboard/orders/:orderId",
+        path: `${rootPath}/orders/:orderId`,
         element: (
           <CustomSuspense>
             <OrderDetails />
@@ -103,7 +105,7 @@ const sellerRoutes = [
         ),
       },
       {
-        path: "/seller/dashboard/payments",
+        path: `${rootPath}/payments`,
         element: (
           <CustomSuspense>
             <Payments />
@@ -111,7 +113,7 @@ const sellerRoutes = [
         ),
       },
       {
-        path: "/seller/dashboard/chat-customer",
+        path: `${rootPath}/chat-customer`,
         element: (
           <CustomSuspense>
             <ChatCustomer />
@@ -119,7 +121,7 @@ const sellerRoutes = [
         ),
       },
       {
-        path: "/seller/dashboard/chat-support",
+        path: `${rootPath}/chat-support`,
         element: (
           <CustomSuspense>
             <ChatSupport />

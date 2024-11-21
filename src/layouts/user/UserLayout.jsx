@@ -11,7 +11,7 @@ import getBrandByCategoryId from "../../services/brands/getBrandsByCategoryId";
 import Sidebar from "./sidebar/Sidebar";
 
 export default function UserLayout() {
-  const loction = useLocation();
+  const location = useLocation();
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [parentCategoriesState, setParentCategoriesState] = useState([]);
   const [subCategoriesState, setSubCategoriesState] = useState([]);

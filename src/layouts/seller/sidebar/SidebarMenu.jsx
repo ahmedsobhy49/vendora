@@ -19,7 +19,7 @@ export default function SidebarMenu({ setShowSideBar }) {
 
       {/* Navigation Links */}
       <ul className="flex flex-col gap-5 flex-grow">
-        {sellerNavigation.map((nav) => (
+        {sellerNavigation().map((nav) => (
           <SidebarLink key={nav.id} to={nav.path} label={nav.label}>
             <span className="text-[2rem]">{nav.icon}</span>
           </SidebarLink>

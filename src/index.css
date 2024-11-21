@@ -6,9 +6,13 @@
   font-size: 0.8em;
 }
 
+body {
+  background: #f3f4f9;
+}
+
 .custom-hight {
-  /* min-height: calc(100vh - 11rem); */
-  min-height: calc(100vh - 2rem);
+  min-height: calc(100vh - 11rem);
+  /* min-height: calc(100vh - 2rem); */
 }
 
 .max-custom-hight {
@@ -97,5 +101,27 @@ th:not(:last-child) {
   /* for responsive brand image */
   .responsive-brand-img-scale {
     transform: scale(2);
+  }
+}
+
+.custom-user-layout-height {
+  min-height: calc(100vh - 77px);
+}
+
+@media screen and (min-width: 960px) {
+  .custom-user-layout-height {
+    min-height: calc(100vh - 150px);
+  }
+}
+
+@media screen and (min-width: 960px) {
+  .custom-user-max-layout-height {
+    max-height: calc(100vh - 149px);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .custom-user-layout-height {
+    min-height: calc(100vh - 206px);
   }
 }

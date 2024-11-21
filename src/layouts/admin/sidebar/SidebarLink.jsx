@@ -8,7 +8,7 @@ export default function SidebarLink({ to, children, label }) {
         end={true}
         to={to}
         className={({ isActive }) =>
-          `flex items-center p-2 rounded-lg hover:bg-gray-100 ${
+          `flex items-center p-2 rounded-lg hover:bg-gray-100  ${
             isActive ? "text-[#1b4332] font-bold bg-gray-200" : "text-gray-800"
           }`
         }

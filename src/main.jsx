@@ -34,7 +34,7 @@
 import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
-
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 // Style imports
 import "./index.css";
 import "./App.css";
@@ -60,11 +60,10 @@ const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
     <Provider store={store}>
-      <Suspense fallback={<div>Loading...</div>}>
-        <RouterProvider router={router}>
-          <App />
-        </RouterProvider>
-      </Suspense>
+      <RouterProvider router={router}>
+        <App />
+        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+      </RouterProvider>
     </Provider>
     <ToastContainer />
   </QueryClientProvider>

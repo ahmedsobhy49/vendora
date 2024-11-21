@@ -8,63 +8,76 @@ import { MdDiscount } from "react-icons/md";
 import { IoChatboxEllipses } from "react-icons/io5";
 import { MdOutlineBorderColor } from "react-icons/md";
 
-const sellerNavigation = [
-  {
-    id: 0,
-    icon: <AiFillDashboard />,
-    path: "/seller/dashboard",
-    label: "Dashboard",
-    role: "seller",
-  },
-  {
-    id: 1,
-    icon: <BsFillCartFill />,
-    path: "/seller/dashboard/add-product",
-    label: "Add Product",
-    role: "seller",
-  },
-  {
-    id: 2,
-    icon: <BiSolidCategory />,
-    path: "/seller/dashboard/all-products",
-    label: "All Products",
-    role: "seller",
-  },
-  {
-    id: 3,
-    icon: <MdDiscount />,
-    path: "/seller/dashboard/discount-products",
-    label: "Discount Products",
-    role: "seller",
-  },
-  {
-    id: 4,
-    icon: <MdOutlineBorderColor />,
-    path: "/seller/dashboard/orders",
-    label: "Orders",
-    role: "seller",
-  },
-  {
-    id: 5,
-    icon: <MdPayments />,
-    path: "/seller/dashboard/payments",
-    label: "Payments",
-    role: "seller",
-  },
-  {
-    id: 6,
-    icon: <BsChatTextFill />,
-    path: "/seller/dashboard/chat-customer",
-    label: "Chat Customer",
-    role: "seller",
-  },
-  {
-    id: 7,
-    icon: <IoChatboxEllipses />,
-    path: "/seller/dashboard/chat-support",
-    label: "Chat support",
-    role: "seller",
-  },
-];
+import { authService } from "../services/auth/auth";
+
+const getRootPath = () => {
+  const decodedToken = authService.decodeToken();
+  if (decodedToken?.id) return `/seller/dashboard/${decodedToken?.id}`;
+};
+
+const sellerNavigation = () => {
+  const rootPath = getRootPath();
+
+  if (!rootPath) return []; // Return an empty array if the token or ID is not available
+
+  return [
+    {
+      id: 0,
+      icon: <AiFillDashboard />,
+      path: `${rootPath}`,
+      label: "Dashboard",
+      role: "seller",
+    },
+    {
+      id: 1,
+      icon: <BsFillCartFill />,
+      path: `${rootPath}/add-product`,
+      label: "Add Product",
+      role: "seller",
+    },
+    {
+      id: 2,
+      icon: <BiSolidCategory />,
+      path: `${rootPath}/all-products`,
+      label: "All Products",
+      role: "seller",
+    },
+    {
+      id: 3,
+      icon: <MdDiscount />,
+      path: `${rootPath}/discount-products`,
+      label: "Discount Products",
+      role: "seller",
+    },
+    {
+      id: 4,
+      icon: <MdOutlineBorderColor />,
+      path: `${rootPath}/orders`,
+      label: "Orders",
+      role: "seller",
+    },
+    {
+      id: 5,
+      icon: <MdPayments />,
+      path: `${rootPath}/payments`,
+      label: "Payments",
+      role: "seller",
+    },
+    {
+      id: 6,
+      icon: <BsChatTextFill />,
+      path: `${rootPath}/chat-customer`,
+      label: "Chat Customer",
+      role: "seller",
+    },
+    {
+      id: 7,
+      icon: <IoChatboxEllipses />,
+      path: `${rootPath}/chat-support`,
+      label: "Chat Support",
+      role: "seller",
+    },
+  ];
+};
 
 export default sellerNavigation;

@@ -55,7 +55,7 @@ export default function SecondaryHeader({
   }, [parentCategoriesState]);
 
   return (
-    <div className="bg-gray-50 flex items-center w-full border-b-2 border-gray-200 relative ">
+    <div className="bg-gray-50 flex items-center w-full border-b-2 border-gray-200 relative overflow-x-hidden ">
       {showLeftArrow && (
         <div className="top-0 bottom-0 absolute -left-2 flex items-center justify-center bg-gradient-to-r from-transparent to-gray-50 pe-4">
           <IoIosArrowBack
